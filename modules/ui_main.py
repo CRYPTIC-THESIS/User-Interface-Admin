@@ -35,7 +35,7 @@ def customTitlebar(root):
     minimize_button = Button(titlebar, text='  ─  ',bg=color['dark'],bd=0, fg='white',font=("calibri", 13),highlightthickness=0)
     minimize_button.place(x=1200, y=10)
 
-    logo = Image.open("User-Interface-Admin/images/Logo.png")
+    logo = Image.open("images/Logo.png")
     img = ImageTk.PhotoImage(logo)
     logo = Label(titlebar, image=img, bg=color['dark'])
     logo.image = img
@@ -112,8 +112,8 @@ def sidebarMenu(root):
         btn.config(bg=color['dark'], activebackground='#252930')
 
     btn_ = [
-        "User-Interface-Admin/images/btnDash.png", "User-Interface-Admin/images/btnTrain.png", "User-Interface-Admin/images/btnTest.png",
-        "User-Interface-Admin/images/btnDeploy.png"
+        "images/btnDash.png", "images/btnTrain.png", "images/btnTest.png",
+        "images/btnDeploy.png"
     ]
     buttons = []
 
@@ -153,7 +153,7 @@ def dashboard():
     date = DateEntry(dateCanvas, width=15, bd=10, font=('Segoe UI semibold', 13), background=color['dark'],
                         mindate=train_from_range, maxdate=train_until_range, date_pattern="mm/dd/y").place(x=0, y=3)
 
-    img = ImageTk.PhotoImage(Image.open('User-Interface-Admin/images/btnCalendar.png'))
+    img = ImageTk.PhotoImage(Image.open('images/btnCalendar.png'))
     btnCalendar = Button(dateCanvas, bg=menuCanvas.cget('background'), bd=0, highlightthickness=0, image=img, 
                         activebackground=menuCanvas.cget('background'))
     btnCalendar.image = img
@@ -165,8 +165,8 @@ def dashboard():
     menuCanvas.create_window(153, 75, window=btnCanvas)
 
     btn_ = [
-        "User-Interface-Admin/images/btnDashAll.png", "User-Interface-Admin/images/btnBitcoin.png", 
-        "User-Interface-Admin/images/btnEthereum.png", "User-Interface-Admin/images/btnDogecoin.png"
+        "images/btnDashAll.png", "images/btnBitcoin.png", 
+        "images/btnEthereum.png", "images/btnDogecoin.png"
     ]
     buttons = []
     
@@ -187,7 +187,7 @@ def dashboard():
     dashCanvas = Canvas(menuCanvas, bg=menuCanvas.cget('background'), width=1007, height=490, highlightthickness=0)
     menuCanvas.create_window(535, 365, window=dashCanvas)
 
-    img = Image.open("User-Interface-Admin/images/Base.png")
+    img = Image.open("images/Base.png")
     img = img.resize((533, 311), Image.ANTIALIAS)
     test = ImageTk.PhotoImage(img, master=dashCanvas)
     base = Label(dashCanvas, image=test, bg=menuCanvas.cget('background'))
@@ -200,7 +200,7 @@ def dashboard():
     base1.image = test
     base1.place(x=0, y=332)
 
-    img = Image.open("User-Interface-Admin/images/Base1.png")
+    img = Image.open("images/Base1.png")
     img = img.resize((450, 486), Image.ANTIALIAS)
     test = ImageTk.PhotoImage(img, master=dashCanvas)
     base2 = Label(dashCanvas, image=test, bg=menuCanvas.cget('background'))
@@ -219,7 +219,7 @@ def train():
     dashCanvas = Canvas(menuCanvas, bg=menuCanvas.cget('background'), width=1007, height=548, highlightthickness=0)
     menuCanvas.create_window(535, 335, window=dashCanvas)
 
-    img = Image.open("User-Interface-Admin/images/Base1.png")
+    img = Image.open("images/Base1.png")
     img = img.resize((317, 544), Image.ANTIALIAS)
     test = ImageTk.PhotoImage(img, master=dashCanvas)
     base = Label(dashCanvas, image=test, bg=menuCanvas.cget('background'))
@@ -244,7 +244,7 @@ def test():
     dashCanvas = Canvas(menuCanvas, bg=menuCanvas.cget('background'), width=1007, height=548, highlightthickness=0)
     menuCanvas.create_window(535, 335, window=dashCanvas)
 
-    img = Image.open("User-Interface-Admin/images/Base1.png")
+    img = Image.open("images/Base1.png")
     img = img.resize((317, 544), Image.ANTIALIAS)
     test = ImageTk.PhotoImage(img, master=dashCanvas)
     base = Label(dashCanvas, image=test, bg=menuCanvas.cget('background'))
@@ -305,4 +305,3 @@ def deploy():
     Label(dashCanvas, text='PREDICTED PRICES', font=("Segoe UI bold", 12), bg=color['light'],
             fg=color['white']).place(x=25, y=192)
 
-    
