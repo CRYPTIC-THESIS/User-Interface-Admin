@@ -30,3 +30,13 @@ After Pushing, click the pull request link then Merge Pull Request if there are 
 #
 *Note: Update the Main Branch Before Editing so that the code is up to date*
 > git pull
+
+#
+Needed Packages/Libraries
+> pip install tk
+
+> pip install tkcalendar
+
+> pip install Pillow
+
+> pip install Pandas
