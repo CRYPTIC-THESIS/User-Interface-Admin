@@ -40,3 +40,9 @@ Needed Packages/Libraries
 > pip install Pillow
 
 > pip install Pandas
+
+#
+Update a Branch to the latest code from the Main Branch
+>git checkout BranchName
+
+>git merge main
