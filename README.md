@@ -45,4 +45,4 @@ Needed Packages/Libraries
 Update a Branch to the latest code from the Main Branch
 >git checkout BranchName
 
->git merge master
+>git merge main
