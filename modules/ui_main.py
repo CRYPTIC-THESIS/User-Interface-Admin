@@ -269,7 +269,7 @@ def deploy():
     dashCanvas = Canvas(menuCanvas, bg=menuCanvas.cget('background'), width=1007, height=548, highlightthickness=0)
     menuCanvas.create_window(535, 335, window=dashCanvas)
 
-    img = Image.open("User-Interface-Admin/images/Base1.png")
+    img = Image.open("images/Base1.png")
     img = img.resize((1003, 156), Image.ANTIALIAS)
     test = ImageTk.PhotoImage(img, master=dashCanvas)
     base = Label(dashCanvas, image=test, bg=menuCanvas.cget('background'))
@@ -282,11 +282,27 @@ def deploy():
     base1.image = test
     base1.place(x=0, y=177)
 
-    img = Image.open("User-Interface-Admin/images/Base.png")
+    img = Image.open("images/Base.png")
     img = img.resize((317, 367), Image.ANTIALIAS)
     test = ImageTk.PhotoImage(img, master=dashCanvas)
     base2 = Label(dashCanvas, image=test, bg=menuCanvas.cget('background'))
     base2.image = test
     base2.place(x=686, y=177)
+
+
+    # Display Dataset
+    Label(dashCanvas, text='Cryptocurrency', font=("Segoe UI semibold", 12), bg=color['light'],
+            fg=color['white']).place(x=25, y=13)
+    
+    Label(dashCanvas, text='Source', font=("Segoe UI semibold", 12), bg=color['light'],
+            fg=color['white']).place(x=255, y=13)
+
+    Label(dashCanvas, text='Time Frame', font=("Segoe UI semibold", 12), bg=color['light'],
+            fg=color['white']).place(x=559, y=13)
+
+    
+    # Predicted Price
+    Label(dashCanvas, text='PREDICTED PRICES', font=("Segoe UI bold", 12), bg=color['light'],
+            fg=color['white']).place(x=25, y=192)
 
     
