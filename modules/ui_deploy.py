@@ -3,6 +3,7 @@ from PIL import ImageTk, Image
 import pandas as pd
 
 from modules.tkinter_custom_button import TkinterCustomButton
+from modules.treeview import *
 
 def deploy(menuCanvas, color):
     # Display Deploy tab
@@ -41,6 +42,12 @@ def dataset(menuCanvas, color):
 
     Label(dashCanvas, text='Time Frame', font=("Segoe UI semibold", 12), bg=color['light'],
             fg=color['white']).place(x=559, y=13)
+
+    
+    # Deploy
+    TkinterCustomButton(master=dashCanvas, text='DEPLOY', text_font=("Segoe UI bold", 11), corner_radius=10,
+                width=85, height=35, text_color=color['white'], bg_color=color['light'], fg_color=color['dark'],
+                hover_color=color['cyan']).place(x=900, y=105)
 
 
 # Predicted Prices card
@@ -88,7 +95,9 @@ def price_tbl(menuCanvas, color):
     base2.image = test
     base2.place(x=686, y=177)
 
-    
+
+    # Treeview
+    tblprice = treeview('Predicted ____ Price', 270, 312, 846, 362, dashCanvas)
 
 
 # Closing, High, Low buttons
