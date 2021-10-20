@@ -3,8 +3,8 @@ from PIL import ImageTk, Image
 from tkcalendar import DateEntry
 import pandas as pd
 
-from modules.tkinter_custom_button import TkinterCustomButton
-from modules.treeview import *
+from assets.elements.tkinter_custom_button import TkinterCustomButton
+from assets.elements.treeview import *
 
 
 def dashboard(menuCanvas, color):
@@ -25,7 +25,7 @@ def dashboard(menuCanvas, color):
     date = DateEntry(dateCanvas, width=15, bd=10, font=('Segoe UI semibold', 13), background=color['dark'],
                         mindate=train_from_range, maxdate=train_until_range, date_pattern="mm/dd/y").place(x=0, y=3)
 
-    img = ImageTk.PhotoImage(Image.open('./images/btnCalendar.png'))
+    img = ImageTk.PhotoImage(Image.open('./assets/images/btnCalendar.png'))
     btnCalendar = Button(dateCanvas, bg=menuCanvas.cget('background'), bd=0, highlightthickness=0, image=img, 
                         activebackground=menuCanvas.cget('background'))
     btnCalendar.image = img
@@ -37,8 +37,8 @@ def dashboard(menuCanvas, color):
     menuCanvas.create_window(153, 75, window=btnCanvas)
 
     btn_ = [
-        "./images/btnDashAll.png", "./images/btnBitcoin.png", 
-        "./images/btnEthereum.png", "./images/btnDogecoin.png"
+        "./assets/images/btnDashAll.png", "./assets/images/btnBitcoin.png", 
+        "./assets/images/btnEthereum.png", "./assets/images/btnDogecoin.png"
     ]
     buttons = []
     
@@ -67,7 +67,7 @@ def dashboard(menuCanvas, color):
 
 # Predicted Price card
 def predicted_prices(menuCanvas, color):
-    img = Image.open("./images/Base.png")
+    img = Image.open("./assets/images/Base.png")
     img = img.resize((533, 311), Image.ANTIALIAS)
     test = ImageTk.PhotoImage(img, master=dashCanvas)
     base = Label(dashCanvas, image=test, bg=menuCanvas.cget('background'))
@@ -103,7 +103,7 @@ def predicted_prices(menuCanvas, color):
 
 # Predicted Prices Table card
 def price_tbl(menuCanvas, color):
-    img = Image.open("./images/Base.png")
+    img = Image.open("./assets/images/Base.png")
     img = img.resize((533, 154), Image.ANTIALIAS)
     test = ImageTk.PhotoImage(img, master=dashCanvas)
     base1 = Label(dashCanvas, image=test, bg=menuCanvas.cget('background'))
@@ -116,7 +116,7 @@ def price_tbl(menuCanvas, color):
 
 # History card
 def history(menuCanvas, color):
-    img = Image.open("./images/Base1.png")
+    img = Image.open("./assets/images/Base1.png")
     img = img.resize((450, 486), Image.ANTIALIAS)
     test = ImageTk.PhotoImage(img, master=dashCanvas)
     base2 = Label(dashCanvas, image=test, bg=menuCanvas.cget('background'))

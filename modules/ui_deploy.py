@@ -2,8 +2,8 @@ from tkinter import *
 from PIL import ImageTk, Image
 import pandas as pd
 
-from modules.tkinter_custom_button import TkinterCustomButton
-from modules.treeview import *
+from assets.elements.tkinter_custom_button import TkinterCustomButton
+from assets.elements.treeview import *
 
 def deploy(menuCanvas, color):
     # Display Deploy tab
@@ -25,7 +25,7 @@ def deploy(menuCanvas, color):
 
 # Dataset card
 def dataset(menuCanvas, color):
-    img = Image.open("./images/Base1.png")
+    img = Image.open("./assets/images/Base1.png")
     img = img.resize((1003, 156), Image.ANTIALIAS)
     test = ImageTk.PhotoImage(img, master=dashCanvas)
     base = Label(dashCanvas, image=test, bg=menuCanvas.cget('background'))
@@ -52,7 +52,7 @@ def dataset(menuCanvas, color):
 
 # Predicted Prices card
 def predicted_prices(menuCanvas, color):
-    img = Image.open("./images/Base1.png")
+    img = Image.open("./assets/images/Base1.png")
     img = img.resize((666, 367), Image.ANTIALIAS)
     test = ImageTk.PhotoImage(img, master=dashCanvas)
     base1 = Label(dashCanvas, image=test, bg=menuCanvas.cget('background'))
@@ -88,7 +88,7 @@ def predicted_prices(menuCanvas, color):
 
 # Predicted Prices Table card
 def price_tbl(menuCanvas, color):
-    img = Image.open("./images/Base.png")
+    img = Image.open("./assets/images/Base.png")
     img = img.resize((317, 367), Image.ANTIALIAS)
     test = ImageTk.PhotoImage(img, master=dashCanvas)
     base2 = Label(dashCanvas, image=test, bg=menuCanvas.cget('background'))
