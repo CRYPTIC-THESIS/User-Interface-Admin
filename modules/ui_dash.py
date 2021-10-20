@@ -2,12 +2,22 @@ from tkinter import *
 from PIL import ImageTk, Image
 from tkcalendar import DateEntry
 import pandas as pd
+import dbconnect as db
+from datetime import datetime
+from datetime import timedelta
 
 from assets.elements.tkinter_custom_button import TkinterCustomButton
 from assets.elements.treeview import *
 
+selected_date = '05/31/2021'
 
 def dashboard(menuCanvas, color):
+    
+    def selected_date():
+        global selected_date
+        selected_date = date.get()
+       #print(selected_date)
+
     # Display Dashboard
     menuCanvas.delete('all')
     print('Dashboard')
@@ -23,14 +33,14 @@ def dashboard(menuCanvas, color):
     menuCanvas.create_window(880, 35, window=dateCanvas)
 
     date = DateEntry(dateCanvas, width=15, bd=10, font=('Segoe UI semibold', 13), background=color['dark'],
-                        mindate=train_from_range, maxdate=train_until_range, date_pattern="mm/dd/y").place(x=0, y=3)
+                        mindate=train_from_range, maxdate=train_until_range, date_pattern="mm/dd/y")
+    date.place(x=0, y=3)
 
     img = ImageTk.PhotoImage(Image.open('./assets/images/btnCalendar.png'))
     btnCalendar = Button(dateCanvas, bg=menuCanvas.cget('background'), bd=0, highlightthickness=0, image=img, 
-                        activebackground=menuCanvas.cget('background'))
+                        activebackground=menuCanvas.cget('background'), command=selected_date)
     btnCalendar.image = img
     btnCalendar.place(x=175, y=0)
-    
 
     # Crypto Buttons
     btnCanvas = Canvas(menuCanvas, bg=menuCanvas.cget('background'), width=240, height=45, highlightthickness=0)
@@ -63,6 +73,7 @@ def dashboard(menuCanvas, color):
     predicted_prices(menuCanvas, color)
     price_tbl(menuCanvas, color)
     history(menuCanvas, color)
+
 
 
 # Predicted Price card
@@ -148,31 +159,53 @@ def history(menuCanvas, color):
     # Closing, High, Low
     btnCanvas = Canvas(dashCanvas, bg=color['light'], width=231, height=26, highlightthickness=0)
     btnCanvas.place(x=758, y=194)
-    prices(btnCanvas, color, color['purple'])
-
-
+    prices(btnCanvas, color, color['purple'])     
+        
     # Days
     dayBtnCanvas = Canvas(dashCanvas, bg=color['light'], width=170, height=27, highlightthickness=0)
     dayBtnCanvas.place(x=582, y=445)
 
-    def select(btn):
+    data = db.get_data_table('Twitter_Data')
+
+    def select(btn , i):
         def select_button():
             for other_btn in buttons:
                 deactivate(other_btn)
             btn.config(bg=color['purple'], activebackground=color['purple'])
+            global end_date,start_date
+            #if 3 Days is selected
+            if (i==0):
+                end_date = datetime.strptime(selected_date,'%m/%d/%Y')
+                start_date = end_date - timedelta(2)
+                print ('From:' + str(start_date) + ' To:' + str(end_date))
+            #if 1 Week is selected
+            elif (i==1):
+                end_date = datetime.strptime(selected_date,'%m/%d/%Y')
+                start_date = end_date - timedelta(6)
+                print ('From:' + str(start_date) + ' To:' + str(end_date))
+            #if 1 Month is selected
+            elif (i==2):
+                end_date = datetime.strptime(selected_date,'%m/%d/%Y')
+                start_date = end_date - timedelta(29)
+                print ('From:' + str(start_date) + ' To:' + str(end_date))
+            #if 1 Year is selected
+            elif (i==3):
+                end_date = datetime.strptime(selected_date,'%m/%d/%Y')
+                start_date = end_date - timedelta(364)
+                print ('From:' + str(start_date) + ' To:' + str(end_date))
         return select_button
 
     def deactivate(btn):
         btn.config(bg='#41464E', activebackground=color['purple'])
 
-    list_ = ['1D', '3D', '1W', '1M', '1Y']
+    list_ = ['3D', '1W', '1M', '1Y']
     buttons = []
 
     x=0
-    for i, name in enumerate(list_, 2):
+    for i, name in enumerate(list_, 0):
         btn = Button(dayBtnCanvas, text=name, font=("Segoe UI bold", 10), width=3, bd=0, highlightthickness=0, 
                         foreground=color['white'], activeforeground=color['white']) 
-        btn['command'] = select(btn)
+        btn['command'] = select(btn , i)
         btn.place(x=x, y=0)
         buttons.append(btn)
         x+=35
