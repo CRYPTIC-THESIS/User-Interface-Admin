@@ -12,7 +12,8 @@ color = {
     'white': '#dddddd',
     'dark': '#21252b',
     'light': '#2c313a',
-    'cyan': '#259CA5'
+    'cyan': '#259CA5',
+    'purple': '#8C88BF'
 }
 
 def ui(root):

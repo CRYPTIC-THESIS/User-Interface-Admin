@@ -3,6 +3,8 @@ from PIL import ImageTk, Image
 from tkcalendar import DateEntry
 import pandas as pd
 
+from modules.tkinter_custom_button import TkinterCustomButton
+
 
 def dashboard(menuCanvas, color):
     # Display Dashboard
@@ -77,6 +79,11 @@ def predicted_prices(menuCanvas, color):
     Label(dashCanvas, text='PREDICTED PRICES', font=("Segoe UI bold", 12), bg=color['light'],
             fg=color['white']).place(x=25, y=13)
 
+    # Closing, High, Low
+    btnCanvas = Canvas(dashCanvas, bg=color['light'], width=231, height=26, highlightthickness=0)
+    btnCanvas.place(x=273, y=14)
+    prices(btnCanvas, color, color['cyan'])
+
 
 # Predicted Prices Table card
 def price_tbl(menuCanvas, color):
@@ -102,4 +109,71 @@ def history(menuCanvas, color):
     Label(dashCanvas, text='CURRENT PRICE', font=("Segoe UI bold", 12), bg=color['light'],
             fg=color['white']).place(x=578, y=13)
     
+    currPriceCanvas = Canvas(dashCanvas, bg=color['light'], width=418.34, height=123, highlightthickness=0)
+    dashCanvas.create_window(782, 110, window=currPriceCanvas)
     
+    btc_card = TkinterCustomButton(master=currPriceCanvas, hover=False, text='', width=418, height=35.38, corner_radius=10, bg_color=color['light'], fg_color='#41464E')
+    eth_card = TkinterCustomButton(master=currPriceCanvas, hover=False, text='', width=418, height=35.38, corner_radius=10, bg_color=color['light'], fg_color='#41464E')
+    doge_card = TkinterCustomButton(master=currPriceCanvas, hover=False, text='', width=418, height=35.38, corner_radius=10, bg_color=color['light'], fg_color='#41464E')
+
+    currPriceCanvas.create_window(209, 17, window=btc_card, tags='btc')
+    currPriceCanvas.create_window(209, 61, window=eth_card, tags='eth')
+    currPriceCanvas.create_window(209, 105, window=doge_card, tags='doge')
+
+
+    # History
+    Label(dashCanvas, text='HISTORY', font=("Segoe UI bold", 12), bg=color['light'],
+            fg=color['white']).place(x=578, y=193)
+
+
+    # Closing, High, Low
+    btnCanvas = Canvas(dashCanvas, bg=color['light'], width=231, height=26, highlightthickness=0)
+    btnCanvas.place(x=758, y=194)
+    prices(btnCanvas, color, color['purple'])
+
+
+    # Days
+    dayBtnCanvas = Canvas(dashCanvas, bg=color['light'], width=170, height=27, highlightthickness=0)
+    dayBtnCanvas.place(x=582, y=445)
+
+    def select(btn):
+        def select_button():
+            for other_btn in buttons:
+                deactivate(other_btn)
+            btn.config(bg=color['purple'], activebackground=color['purple'])
+        return select_button
+
+    def deactivate(btn):
+        btn.config(bg='#41464E', activebackground=color['purple'])
+
+    list_ = ['1D', '3D', '1W', '1M', '1Y']
+    buttons = []
+
+    x=0
+    for i, name in enumerate(list_, 2):
+        btn = Button(dayBtnCanvas, text=name, font=("Segoe UI bold", 10), width=3, bd=0, highlightthickness=0, 
+                        foreground=color['white'], activeforeground=color['white']) 
+        btn['command'] = select(btn)
+        btn.place(x=x, y=0)
+        buttons.append(btn)
+        x+=35
+    buttons[0].invoke()
+
+
+# Closing, High, Low buttons
+def prices(canvas, color, text_color):
+    closing = TkinterCustomButton(master=canvas, text='Closing', text_font=("Segoe UI semibold", 11), corner_radius=32,
+                width=86, height=26, text_color=text_color, bg_color=color['light'], fg_color=color['light'],
+                hover_color='white')
+    
+    high = TkinterCustomButton(master=canvas, text='High', text_font=("Segoe UI semibold", 11), corner_radius=32,
+                width=65, height=26, text_color=text_color, bg_color=color['light'], fg_color=color['light'],
+                hover_color='white')
+
+    low = TkinterCustomButton(master=canvas, text='Low', text_font=("Segoe UI semibold", 11), corner_radius=32,
+                width=60, height=26, text_color=text_color, bg_color=color['light'], fg_color=color['light'],
+                hover_color='white')
+
+    canvas.create_window(43, 13, window=closing, tags='closing')
+    canvas.create_window(128.45, 13, window=high, tags='high')
+    canvas.create_window(201, 13, window=low, tags='low')
