@@ -3,7 +3,8 @@ from PIL import ImageTk, Image
 from tkcalendar import DateEntry
 import pandas as pd
 
-from modules.tkinter_custom_button import TkinterCustomButton
+from assets.elements.tkinter_custom_button import TkinterCustomButton
+from assets.elements.treeview import *
 
 
 def dashboard(menuCanvas, color):
@@ -11,9 +12,6 @@ def dashboard(menuCanvas, color):
     menuCanvas.delete('all')
     print('Dashboard')
 
-    # title = Label(menuCanvas, text='CRYPTOCURRENCY', font=("Segoe UI bold", 20), bg=menuCanvas.cget('background'),
-    #                 fg=color['white'])
-    # menuCanvas.create_window(150, 30, window=title)
     menuCanvas.create_text(155, 28, text='CRYPTOCURRENCY', font=("Segoe UI bold", 20), fill=color['white'])
 
     # Pick Date
@@ -27,7 +25,7 @@ def dashboard(menuCanvas, color):
     date = DateEntry(dateCanvas, width=15, bd=10, font=('Segoe UI semibold', 13), background=color['dark'],
                         mindate=train_from_range, maxdate=train_until_range, date_pattern="mm/dd/y").place(x=0, y=3)
 
-    img = ImageTk.PhotoImage(Image.open('./images/btnCalendar.png'))
+    img = ImageTk.PhotoImage(Image.open('./assets/images/btnCalendar.png'))
     btnCalendar = Button(dateCanvas, bg=menuCanvas.cget('background'), bd=0, highlightthickness=0, image=img, 
                         activebackground=menuCanvas.cget('background'))
     btnCalendar.image = img
@@ -39,8 +37,8 @@ def dashboard(menuCanvas, color):
     menuCanvas.create_window(153, 75, window=btnCanvas)
 
     btn_ = [
-        "./images/btnDashAll.png", "./images/btnBitcoin.png", 
-        "./images/btnEthereum.png", "./images/btnDogecoin.png"
+        "./assets/images/btnDashAll.png", "./assets/images/btnBitcoin.png", 
+        "./assets/images/btnEthereum.png", "./assets/images/btnDogecoin.png"
     ]
     buttons = []
     
@@ -69,7 +67,7 @@ def dashboard(menuCanvas, color):
 
 # Predicted Price card
 def predicted_prices(menuCanvas, color):
-    img = Image.open("./images/Base.png")
+    img = Image.open("./assets/images/Base.png")
     img = img.resize((533, 311), Image.ANTIALIAS)
     test = ImageTk.PhotoImage(img, master=dashCanvas)
     base = Label(dashCanvas, image=test, bg=menuCanvas.cget('background'))
@@ -79,25 +77,46 @@ def predicted_prices(menuCanvas, color):
     Label(dashCanvas, text='PREDICTED PRICES', font=("Segoe UI bold", 12), bg=color['light'],
             fg=color['white']).place(x=25, y=13)
 
+
     # Closing, High, Low
     btnCanvas = Canvas(dashCanvas, bg=color['light'], width=231, height=26, highlightthickness=0)
     btnCanvas.place(x=273, y=14)
     prices(btnCanvas, color, color['cyan'])
 
 
+    # Days Slider
+    slider_canvas = Canvas(dashCanvas, width=250, height=40, highlightthickness=0, bg=color['light'])#
+    slider_canvas.place(x=25, y=260)
+
+    current_value = DoubleVar()
+    def get_current_value():
+        return '{: .2f}'.format(current_value.get())
+
+    def slider_changed(event):
+        print(int(round(float(get_current_value()))))
+
+    Label(slider_canvas,text='Days:', font=("Segoe UI semibold", 10), bg=color['light'] , fg='white').place(x=0, y=16)
+
+    Scale(slider_canvas, from_=1, to=14, orient='horizontal', sliderrelief='flat', variable=current_value, bg=color['light'],
+            command=slider_changed,length=205, fg='white', troughcolor=color['cyan'], highlightthickness=0).place(x=40, y=0)
+
+
 # Predicted Prices Table card
 def price_tbl(menuCanvas, color):
-    img = Image.open("./images/Base.png")
+    img = Image.open("./assets/images/Base.png")
     img = img.resize((533, 154), Image.ANTIALIAS)
     test = ImageTk.PhotoImage(img, master=dashCanvas)
     base1 = Label(dashCanvas, image=test, bg=menuCanvas.cget('background'))
     base1.image = test
     base1.place(x=0, y=332)
 
+    # Treeview
+    tblprice = treeview('Predicted ____ Price', 490, 110, 267, 408, dashCanvas)
+
 
 # History card
 def history(menuCanvas, color):
-    img = Image.open("./images/Base1.png")
+    img = Image.open("./assets/images/Base1.png")
     img = img.resize((450, 486), Image.ANTIALIAS)
     test = ImageTk.PhotoImage(img, master=dashCanvas)
     base2 = Label(dashCanvas, image=test, bg=menuCanvas.cget('background'))

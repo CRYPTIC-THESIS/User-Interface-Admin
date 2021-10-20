@@ -3,8 +3,15 @@ from PIL import Image, ImageTk
 import pandas as pd
 from tkcalendar import DateEntry
 
+<<<<<<< HEAD
 from modules.tkinter_custom_button import *
 from modules.ui_dash import *
+=======
+from assets.elements.tkinter_custom_button import *
+from modules.ui_dash import *
+from modules.ui_deploy import *
+from modules.ui_train import *
+>>>>>>> main
 
 # Color
 color = {
@@ -13,7 +20,13 @@ color = {
     'dark': '#21252b',
     'light': '#2c313a',
     'cyan': '#259CA5',
+<<<<<<< HEAD
     'purple': '#8C88BF'
+=======
+    'purple': '#8C88BF',
+    'green': '#30960C',
+    'red': '#B20D0D'
+>>>>>>> main
 }
 
 def ui(root):
@@ -40,7 +53,11 @@ def customTitlebar(root):
     minimize_button = Button(titlebar, text='  ─  ',bg=color['dark'],bd=0, fg='white',font=("calibri", 13),highlightthickness=0)
     minimize_button.place(x=1200, y=10)
 
+<<<<<<< HEAD
     logo = Image.open("./images/Logo.png")
+=======
+    logo = Image.open("./assets/images/Logo.png")
+>>>>>>> main
     img = ImageTk.PhotoImage(logo)
     logo = Label(titlebar, image=img, bg=color['dark'])
     logo.image = img
@@ -88,6 +105,10 @@ def customTitlebar(root):
     minimize_button.bind('<Button-1>', minimize_me)    
     titlebar.bind("<Map>",frame_mapped)
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> main
 def sidebarMenu(root):
     # Sidebar Menu
     def select(btn, i):
@@ -105,11 +126,19 @@ def sidebarMenu(root):
             if i == 0:
                 dashboard(menuCanvas, color)
             elif i == 1:
+<<<<<<< HEAD
                 train()
             elif i == 2:
                 test()
             else:
                 deploy()
+=======
+                train(menuCanvas, color)
+            elif i == 2:
+                test()
+            else:
+                deploy(menuCanvas, color)
+>>>>>>> main
                    
         return select_button
 
@@ -117,8 +146,13 @@ def sidebarMenu(root):
         btn.config(bg=color['dark'], activebackground='#252930')
 
     btn_ = [
+<<<<<<< HEAD
         "./images/btnDash.png", "./images/btnTrain.png", "./images/btnTest.png",
         "./images/btnDeploy.png"
+=======
+        "./assets/images/btnDash.png", "./assets/images/btnTrain.png", "./assets/images/btnTest.png",
+        "./assets/images/btnDeploy.png"
+>>>>>>> main
     ]
     buttons = []
 
@@ -138,6 +172,7 @@ def sidebarMenu(root):
     buttons[0].invoke()
 
 
+<<<<<<< HEAD
 def train():
     # Display Train tab
     menuCanvas.delete('all')
@@ -163,6 +198,8 @@ def train():
     base1.place(x=338, y=0)
 
 
+=======
+>>>>>>> main
 def test():
     # Display Test tab
     menuCanvas.delete('all')
@@ -174,7 +211,11 @@ def test():
     dashCanvas = Canvas(menuCanvas, bg=menuCanvas.cget('background'), width=1007, height=548, highlightthickness=0)
     menuCanvas.create_window(535, 335, window=dashCanvas)
 
+<<<<<<< HEAD
     img = Image.open("./images/Base1.png")
+=======
+    img = Image.open("./assets/images/Base1.png")
+>>>>>>> main
     img = img.resize((317, 544), Image.ANTIALIAS)
     test = ImageTk.PhotoImage(img, master=dashCanvas)
     base = Label(dashCanvas, image=test, bg=menuCanvas.cget('background'))
@@ -187,6 +228,7 @@ def test():
     base1.image = test
     base1.place(x=338, y=0)
 
+<<<<<<< HEAD
 
 def deploy():
     # Display Deploy tab
@@ -244,3 +286,5 @@ def deploy():
     closing.place(x=0, y=0)
 
     # closing.configure(fg_color='white')
+=======
+>>>>>>> main
