@@ -8,6 +8,7 @@ from datetime import timedelta
 
 from assets.elements.tkinter_custom_button import TkinterCustomButton
 from assets.elements.treeview import *
+from modules.ui_train import get_data
 
 selected_date = '05/31/2021'
 
@@ -24,6 +25,13 @@ def dashboard(menuCanvas, color):
 
     menuCanvas.create_text(155, 28, text='CRYPTOCURRENCY', font=("Segoe UI bold", 20), fill=color['white'])
 
+
+    # Get Date command
+    def get_date():
+        print('get_date')
+        this_date = date.get()
+        print(this_date)
+
     # Pick Date
     global train_from_range, train_until_range
     train_from_range = pd.to_datetime("01-01-2020")
@@ -39,6 +47,7 @@ def dashboard(menuCanvas, color):
     img = ImageTk.PhotoImage(Image.open('./assets/images/btnCalendar.png'))
     btnCalendar = Button(dateCanvas, bg=menuCanvas.cget('background'), bd=0, highlightthickness=0, image=img, 
                         activebackground=menuCanvas.cget('background'), command=selected_date)
+
     btnCalendar.image = img
     btnCalendar.place(x=175, y=0)
 

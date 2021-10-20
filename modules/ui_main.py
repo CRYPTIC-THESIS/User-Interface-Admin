@@ -7,6 +7,8 @@ from assets.elements.tkinter_custom_button import *
 from modules.ui_dash import *
 from modules.ui_deploy import *
 from modules.ui_train import *
+from modules.ui_test import *
+
 
 
 # Color
@@ -22,7 +24,6 @@ color = {
 }
 
 def ui(root):
-    print('hello')
 
     # Display Titlebar
     customTitlebar(root)
@@ -112,7 +113,7 @@ def sidebarMenu(root):
             elif i == 1:
                 train(menuCanvas, color)
             elif i == 2:
-                test()
+                test(menuCanvas, color)
             else:
                 deploy(menuCanvas, color)
                    
@@ -141,28 +142,3 @@ def sidebarMenu(root):
         y+=59
     
     buttons[0].invoke()
-
-
-def test():
-    # Display Test tab
-    menuCanvas.delete('all')
-    print('Test')
-
-    menuCanvas.create_text(65, 28, text='TEST', font=("Segoe UI bold", 20), fill=color['white'])
-
-    # Cards
-    dashCanvas = Canvas(menuCanvas, bg=menuCanvas.cget('background'), width=1007, height=548, highlightthickness=0)
-    menuCanvas.create_window(535, 335, window=dashCanvas)
-
-    img = Image.open("./assets/images/Base1.png")
-    img = img.resize((317, 544), Image.ANTIALIAS)
-    test = ImageTk.PhotoImage(img, master=dashCanvas)
-    base = Label(dashCanvas, image=test, bg=menuCanvas.cget('background'))
-    base.image = test
-    base.place(x=0, y=0)
-
-    img = img.resize((665, 544), Image.ANTIALIAS)
-    test = ImageTk.PhotoImage(img, master=dashCanvas)
-    base1 = Label(dashCanvas, image=test, bg=menuCanvas.cget('background'))
-    base1.image = test
-    base1.place(x=338, y=0)
