@@ -4,6 +4,7 @@ from tkcalendar import DateEntry
 import pandas as pd
 
 from modules.tkinter_custom_button import TkinterCustomButton
+from modules.treeview import *
 
 
 def dashboard(menuCanvas, color):
@@ -108,6 +109,9 @@ def price_tbl(menuCanvas, color):
     base1 = Label(dashCanvas, image=test, bg=menuCanvas.cget('background'))
     base1.image = test
     base1.place(x=0, y=332)
+
+    # Treeview
+    tblprice = treeview('Predicted ____ Price', 490, 110, 267, 408, dashCanvas)
 
 
 # History card
