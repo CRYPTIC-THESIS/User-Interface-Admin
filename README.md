@@ -41,6 +41,8 @@ Needed Packages/Libraries
 
 > pip install Pandas
 
+> pip install firebase-admin
+
 #
 Update a Branch to the latest code from the Main Branch
 >git checkout BranchName
