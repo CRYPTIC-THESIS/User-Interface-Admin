@@ -2,9 +2,11 @@ from tkinter import *
 from PIL import ImageTk, Image
 from tkcalendar import DateEntry
 import pandas as pd
+from datetime import datetime
 
 from assets.elements.tkinter_custom_button import TkinterCustomButton
 from assets.elements.treeview import *
+from modules.ui_train import get_data
 
 
 def dashboard(menuCanvas, color):
@@ -13,6 +15,13 @@ def dashboard(menuCanvas, color):
     print('Dashboard')
 
     menuCanvas.create_text(155, 28, text='CRYPTOCURRENCY', font=("Segoe UI bold", 20), fill=color['white'])
+
+
+    # Get Date command
+    def get_date():
+        print('get_date')
+        this_date = date.get()
+        print(this_date)
 
     # Pick Date
     global train_from_range, train_until_range
@@ -23,11 +32,12 @@ def dashboard(menuCanvas, color):
     menuCanvas.create_window(880, 35, window=dateCanvas)
 
     date = DateEntry(dateCanvas, width=15, bd=10, font=('Segoe UI semibold', 13), background=color['dark'],
-                        mindate=train_from_range, maxdate=train_until_range, date_pattern="mm/dd/y").place(x=0, y=3)
+                        mindate=train_from_range, maxdate=train_until_range, date_pattern="mm/dd/y")
+    date.place(x=0, y=3)
 
     img = ImageTk.PhotoImage(Image.open('./assets/images/btnCalendar.png'))
     btnCalendar = Button(dateCanvas, bg=menuCanvas.cget('background'), bd=0, highlightthickness=0, image=img, 
-                        activebackground=menuCanvas.cget('background'))
+                        activebackground=menuCanvas.cget('background'), command=get_date)
     btnCalendar.image = img
     btnCalendar.place(x=175, y=0)
     
