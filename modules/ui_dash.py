@@ -11,9 +11,6 @@ def dashboard(menuCanvas, color):
     menuCanvas.delete('all')
     print('Dashboard')
 
-    # title = Label(menuCanvas, text='CRYPTOCURRENCY', font=("Segoe UI bold", 20), bg=menuCanvas.cget('background'),
-    #                 fg=color['white'])
-    # menuCanvas.create_window(150, 30, window=title)
     menuCanvas.create_text(155, 28, text='CRYPTOCURRENCY', font=("Segoe UI bold", 20), fill=color['white'])
 
     # Pick Date
@@ -79,10 +76,28 @@ def predicted_prices(menuCanvas, color):
     Label(dashCanvas, text='PREDICTED PRICES', font=("Segoe UI bold", 12), bg=color['light'],
             fg=color['white']).place(x=25, y=13)
 
+
     # Closing, High, Low
     btnCanvas = Canvas(dashCanvas, bg=color['light'], width=231, height=26, highlightthickness=0)
     btnCanvas.place(x=273, y=14)
     prices(btnCanvas, color, color['cyan'])
+
+
+    # Days Slider
+    slider_canvas = Canvas(dashCanvas, width=250, height=40, highlightthickness=0, bg=color['light'])#
+    slider_canvas.place(x=25, y=260)
+
+    current_value = DoubleVar()
+    def get_current_value():
+        return '{: .2f}'.format(current_value.get())
+
+    def slider_changed(event):
+        print(int(round(float(get_current_value()))))
+
+    Label(slider_canvas,text='Days:', font=("Segoe UI semibold", 10), bg=color['light'] , fg='white').place(x=0, y=16)
+
+    Scale(slider_canvas, from_=1, to=14, orient='horizontal', sliderrelief='flat', variable=current_value, bg=color['light'],
+            command=slider_changed,length=205, fg='white', troughcolor=color['cyan'], highlightthickness=0).place(x=40, y=0)
 
 
 # Predicted Prices Table card

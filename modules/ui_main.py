@@ -5,6 +5,7 @@ from tkcalendar import DateEntry
 
 from modules.tkinter_custom_button import *
 from modules.ui_dash import *
+from modules.ui_deploy import *
 
 # Color
 color = {
@@ -109,7 +110,7 @@ def sidebarMenu(root):
             elif i == 2:
                 test()
             else:
-                deploy()
+                deploy(menuCanvas, color)
                    
         return select_button
 
@@ -188,59 +189,59 @@ def test():
     base1.place(x=338, y=0)
 
 
-def deploy():
-    # Display Deploy tab
-    menuCanvas.delete('all')
-    print('Test')
+# def deploy():
+#     # Display Deploy tab
+#     menuCanvas.delete('all')
+#     print('Test')
 
-    menuCanvas.create_text(80, 28, text='DEPLOY', font=("Segoe UI bold", 20), fill=color['white'])
+#     menuCanvas.create_text(80, 28, text='DEPLOY', font=("Segoe UI bold", 20), fill=color['white'])
 
-    # Cards
-    dashCanvas = Canvas(menuCanvas, bg=menuCanvas.cget('background'), width=1007, height=548, highlightthickness=0)
-    menuCanvas.create_window(535, 335, window=dashCanvas)
+#     # Cards
+#     dashCanvas = Canvas(menuCanvas, bg=menuCanvas.cget('background'), width=1007, height=548, highlightthickness=0)
+#     menuCanvas.create_window(535, 335, window=dashCanvas)
 
-    img = Image.open("./images/Base1.png")
-    img = img.resize((1003, 156), Image.ANTIALIAS)
-    test = ImageTk.PhotoImage(img, master=dashCanvas)
-    base = Label(dashCanvas, image=test, bg=menuCanvas.cget('background'))
-    base.image = test
-    base.place(x=0, y=0)
+#     img = Image.open("./images/Base1.png")
+#     img = img.resize((1003, 156), Image.ANTIALIAS)
+#     test = ImageTk.PhotoImage(img, master=dashCanvas)
+#     base = Label(dashCanvas, image=test, bg=menuCanvas.cget('background'))
+#     base.image = test
+#     base.place(x=0, y=0)
 
-    img = img.resize((666, 367), Image.ANTIALIAS)
-    test = ImageTk.PhotoImage(img, master=dashCanvas)
-    base1 = Label(dashCanvas, image=test, bg=menuCanvas.cget('background'))
-    base1.image = test
-    base1.place(x=0, y=177)
+#     img = img.resize((666, 367), Image.ANTIALIAS)
+#     test = ImageTk.PhotoImage(img, master=dashCanvas)
+#     base1 = Label(dashCanvas, image=test, bg=menuCanvas.cget('background'))
+#     base1.image = test
+#     base1.place(x=0, y=177)
 
-    img = Image.open("./images/Base.png")
-    img = img.resize((317, 367), Image.ANTIALIAS)
-    test = ImageTk.PhotoImage(img, master=dashCanvas)
-    base2 = Label(dashCanvas, image=test, bg=menuCanvas.cget('background'))
-    base2.image = test
-    base2.place(x=686, y=177)
+#     img = Image.open("./images/Base.png")
+#     img = img.resize((317, 367), Image.ANTIALIAS)
+#     test = ImageTk.PhotoImage(img, master=dashCanvas)
+#     base2 = Label(dashCanvas, image=test, bg=menuCanvas.cget('background'))
+#     base2.image = test
+#     base2.place(x=686, y=177)
 
 
-    # Display Dataset
-    Label(dashCanvas, text='Cryptocurrency', font=("Segoe UI semibold", 12), bg=color['light'],
-            fg=color['white']).place(x=25, y=13)
+#     # Display Dataset
+#     Label(dashCanvas, text='Cryptocurrency', font=("Segoe UI semibold", 12), bg=color['light'],
+#             fg=color['white']).place(x=25, y=13)
     
-    Label(dashCanvas, text='Source', font=("Segoe UI semibold", 12), bg=color['light'],
-            fg=color['white']).place(x=255, y=13)
+#     Label(dashCanvas, text='Source', font=("Segoe UI semibold", 12), bg=color['light'],
+#             fg=color['white']).place(x=255, y=13)
 
-    Label(dashCanvas, text='Time Frame', font=("Segoe UI semibold", 12), bg=color['light'],
-            fg=color['white']).place(x=559, y=13)
+#     Label(dashCanvas, text='Time Frame', font=("Segoe UI semibold", 12), bg=color['light'],
+#             fg=color['white']).place(x=559, y=13)
 
     
-    # Predicted Price
-    Label(dashCanvas, text='PREDICTED PRICES', font=("Segoe UI bold", 12), bg=color['light'],
-            fg=color['white']).place(x=25, y=192)
+#     # Predicted Price
+#     Label(dashCanvas, text='PREDICTED PRICES', font=("Segoe UI bold", 12), bg=color['light'],
+#             fg=color['white']).place(x=25, y=192)
 
-    btnCanvas = Canvas(dashCanvas, bg='blue', width=231, height=26, highlightthickness=0)
-    btnCanvas.place(x=408, y=193)
+#     btnCanvas = Canvas(dashCanvas, bg='blue', width=231, height=26, highlightthickness=0)
+#     btnCanvas.place(x=408, y=193)
 
-    closing = TkinterCustomButton(master=btnCanvas, text='Closing', text_font=("Segoe UI semibold", 11), corner_radius=32,
-                width=86, height=26, text_color=color['cyan'], bg_color=color['light'], fg_color=color['light'],
-                hover_color='white')
-    closing.place(x=0, y=0)
+#     closing = TkinterCustomButton(master=btnCanvas, text='Closing', text_font=("Segoe UI semibold", 11), corner_radius=32,
+#                 width=86, height=26, text_color=color['cyan'], bg_color=color['light'], fg_color=color['light'],
+#                 hover_color='white')
+#     closing.place(x=0, y=0)
 
-    # closing.configure(fg_color='white')
+#     # closing.configure(fg_color='white')
