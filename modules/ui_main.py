@@ -10,6 +10,7 @@ from modules.ui_train import *
 from modules.ui_test import *
 
 
+
 # Color
 color = {
     'primary': '#282c34',
@@ -93,7 +94,6 @@ def customTitlebar(root):
     minimize_button.bind('<Button-1>', minimize_me)    
     titlebar.bind("<Map>",frame_mapped)
 
-
 def sidebarMenu(root):
     # Sidebar Menu
     def select(btn, i):
@@ -142,5 +142,3 @@ def sidebarMenu(root):
         y+=59
     
     buttons[0].invoke()
-
-
