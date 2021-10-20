@@ -34,7 +34,7 @@ def treeview(title, width, height, x, y, container):
     style = ttk.Style(tv_canvas)
     style.theme_use("clam")
     style.configure("Treeview", background="#404C62",
-                foreground="white", fieldbackground='#41464E')
+                foreground="white", fieldbackground='#94B0B3')
     style.map('Treeview', background=[('selected',color['cyan'])], foreground=[('selected',"white")])
 
     style.configure("Treeview.Heading", background="white",
