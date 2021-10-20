@@ -9,6 +9,7 @@ from datetime import timedelta
 from assets.elements.tkinter_custom_button import TkinterCustomButton
 from assets.elements.treeview import *
 from modules.ui_train import get_data
+import dbconnect as db 
 
 selected_date = '05/31/2021'
 

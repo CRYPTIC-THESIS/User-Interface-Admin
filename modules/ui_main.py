@@ -113,7 +113,7 @@ def sidebarMenu(root):
             elif i == 1:
                 train(menuCanvas, color)
             elif i == 2:
-                test(menuCanvas, color)
+                test(menuCanvas, color, buttons)
             else:
                 deploy(menuCanvas, color)
                    

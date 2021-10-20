@@ -16,37 +16,20 @@ def train(menuCanvas, color):
 
     menuCanvas.create_text(78, 28, text='TRAIN', font=("Segoe UI bold", 20), fill=color['white'])
 
-    # Display Cards
-    cards(menuCanvas, color)
-
-
-# Cards
-def cards(menuCanvas, color):
     global dashCanvas
     dashCanvas = Canvas(menuCanvas, bg=menuCanvas.cget('background'), width=1007, height=548, highlightthickness=0)
     menuCanvas.create_window(535, 335, window=dashCanvas)
 
-    img = Image.open("./assets/images/Base1.png")
-    img = img.resize((317, 544), Image.ANTIALIAS)
-    test = ImageTk.PhotoImage(img, master=dashCanvas)
-    base = Label(dashCanvas, image=test, bg=menuCanvas.cget('background'))
-    base.image = test
-    dashCanvas.create_image(0,0, anchor=NW, image=test)
-
-    img = img.resize((665, 544), Image.ANTIALIAS)
-    test = ImageTk.PhotoImage(img, master=dashCanvas)
-    base1 = Label(dashCanvas, image=test, bg=menuCanvas.cget('background'))
-    base1.image = test
-    dashCanvas.create_image(338,0, anchor=NW, image=test)
-
-    dashCanvas.create_text(17, 13, text='GET DATA', font=("Segoe UI bold", 12), fill=color['white'], anchor=NW)
-    dashCanvas.create_text(365, 13, text='DATASET', font=("Segoe UI bold", 12), fill=color['white'], anchor=NW)
-
+    # Display Get Data
     get_data(menuCanvas, color)
 
 
 # Get Data
 def get_data(menuCanvas, color):
+    cards('get data', menuCanvas)
+
+    dashCanvas.create_text(17, 13, text='GET DATA', font=("Segoe UI bold", 12), fill=color['white'], anchor=NW)
+    dashCanvas.create_text(365, 13, text='DATASET', font=("Segoe UI bold", 12), fill=color['white'], anchor=NW)
     
     # Proceed command
     def proceed():
@@ -87,6 +70,8 @@ def data_analysis(menuCanvas):
     print('hello')
     dashCanvas.delete('all')
     menuCanvas.delete('button')
+    
+    cards('data analysis', menuCanvas)
 
 
     # Start Training button
@@ -105,3 +90,24 @@ def start_training(menuCanvas):
     dashCanvas.delete('all')
     menuCanvas.delete('button')
 
+
+# Cards
+def cards(tab, menuCanvas):
+    if tab == 'get data':
+        img = Image.open("./assets/images/Base1.png")
+        img = img.resize((317, 544), Image.ANTIALIAS)
+        test = ImageTk.PhotoImage(img, master=dashCanvas)
+        base = Label(dashCanvas, image=test, bg=menuCanvas.cget('background'))
+        base.image = test
+        dashCanvas.create_image(0,0, anchor=NW, image=test)
+
+        img = img.resize((665, 544), Image.ANTIALIAS)
+        test = ImageTk.PhotoImage(img, master=dashCanvas)
+        base1 = Label(dashCanvas, image=test, bg=menuCanvas.cget('background'))
+        base1.image = test
+        dashCanvas.create_image(338,0, anchor=NW, image=test)
+    elif tab == 'data analysis':
+        print(tab)
+    else:
+        print('training data')
+    
