@@ -34,6 +34,15 @@ def testing(menuCanvas, color, buttons):
     def start_testing():
         cards('start', menuCanvas)
 
+        # Data Analysis button
+        toDataCanvas = Canvas(menuCanvas, bg=menuCanvas.cget('background'), width=204, height=35, highlightthickness=0)
+        menuCanvas.create_window(948, 27, window=toDataCanvas, tags='button')
+
+        img = ImageTk.PhotoImage(Image.open('./assets/images/btnDataAnalysis.png'))
+        btn = Button(toDataCanvas, command=partial(data_analysis, menuCanvas), bg=color['primary'], bd=0, highlightthickness=0, image=img, activebackground=color['primary'])
+        btn.image = img
+        btn.place(x=0, y=0)
+
 
     # Get Data Command
     def toTrainTab():
@@ -50,6 +59,15 @@ def testing(menuCanvas, color, buttons):
                 width=95, height=35, text_color=color['white'], bg_color=color['light'], fg_color=color['dark'],
                 hover_color=color['cyan'], command=toTrainTab)
     dashCanvas.create_window(740, 105, anchor=NW, window=btnGetData)
+
+
+# Data Analysis
+def data_analysis(menuCanvas):
+    print('hello')
+    dashCanvas.delete('all')
+    menuCanvas.delete('button')
+    
+    cards('data analysis', menuCanvas)
 
 
 def cards(tab, menuCanvas):

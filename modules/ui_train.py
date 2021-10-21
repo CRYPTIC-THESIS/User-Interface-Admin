@@ -36,12 +36,12 @@ def get_data(menuCanvas, color):
         # Treeview
         tbldataset = treeview('', 590, 450, 671, 285, dashCanvas)
 
-        # Data Analysis button
-        toDataCanvas = Canvas(menuCanvas, bg=menuCanvas.cget('background'), width=204, height=35, highlightthickness=0)
-        menuCanvas.create_window(948, 27, window=toDataCanvas, tags='button')
+        # Start Training button
+        toTrainingCanvas = Canvas(menuCanvas, bg=menuCanvas.cget('background'), width=204, height=35, highlightthickness=0)
+        menuCanvas.create_window(948, 27, window=toTrainingCanvas, tags='button')
 
-        img = ImageTk.PhotoImage(Image.open('./assets/images/btnDataAnalysis.png'))
-        btn = Button(toDataCanvas, command=partial(data_analysis, menuCanvas), bg=color['primary'], bd=0, highlightthickness=0, image=img, activebackground=color['primary'])
+        img = ImageTk.PhotoImage(Image.open('./assets/images/btnStartTraining.png'))
+        btn = Button(toTrainingCanvas, command=partial(start_training, menuCanvas), bg=color['primary'], bd=0, highlightthickness=0, image=img, activebackground=color['primary'])
         btn.image = img
         btn.place(x=0, y=0)
 
@@ -65,23 +65,23 @@ def get_data(menuCanvas, color):
     dashCanvas.create_window(117, 495, anchor=NW, window=btnCancel)
 
 
-# Data Analysis
-def data_analysis(menuCanvas):
-    print('hello')
-    dashCanvas.delete('all')
-    menuCanvas.delete('button')
+# # Data Analysis
+# def data_analysis(menuCanvas):
+#     print('hello')
+#     dashCanvas.delete('all')
+#     menuCanvas.delete('button')
     
-    cards('data analysis', menuCanvas)
+#     cards('data analysis', menuCanvas)
 
 
-    # Start Training button
-    toTrainingCanvas = Canvas(menuCanvas, bg=menuCanvas.cget('background'), width=204, height=35, highlightthickness=0)
-    menuCanvas.create_window(948, 27, window=toTrainingCanvas, tags='button')
+#     # Start Training button
+#     toTrainingCanvas = Canvas(menuCanvas, bg=menuCanvas.cget('background'), width=204, height=35, highlightthickness=0)
+#     menuCanvas.create_window(948, 27, window=toTrainingCanvas, tags='button')
 
-    img = ImageTk.PhotoImage(Image.open('./assets/images/btnStartTraining.png'))
-    btn = Button(toTrainingCanvas, command=partial(start_training, menuCanvas), bg=color['primary'], bd=0, highlightthickness=0, image=img, activebackground=color['primary'])
-    btn.image = img
-    btn.place(x=0, y=0)
+#     img = ImageTk.PhotoImage(Image.open('./assets/images/btnStartTraining.png'))
+#     btn = Button(toTrainingCanvas, command=partial(start_training, menuCanvas), bg=color['primary'], bd=0, highlightthickness=0, image=img, activebackground=color['primary'])
+#     btn.image = img
+#     btn.place(x=0, y=0)
 
 
 # Start Training
