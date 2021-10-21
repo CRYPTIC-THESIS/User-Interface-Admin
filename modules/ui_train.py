@@ -28,8 +28,8 @@ def select_data():
     print('Hello Select Data')
     selected_crypto = 'Bitcoin'
     selected_sources = 'Bitcoin_Data, Twitter_Data, Reddit_Data, Google_Data'
-    from_date = '2020-01-01'
-    to_date = '2020-01-31'
+    from_date = '2020-02-01'
+    to_date = '2020-02-29'
     if (selected_crypto=='Bitcoin'):
         crypto_data = pd.DataFrame(db.get_data_table('Bitcoin_Data'))
         crypto_data['date'] = pd.to_datetime(crypto_data['date'])
@@ -37,7 +37,7 @@ def select_data():
         if (selected_sources == 'Bitcoin_Data, Twitter_Data, Reddit_Data, Google_Data'):
             #Twitter
             twitter_data = pd.DataFrame(db.get_data_table('Twitter_Data'))
-            twitter_data['date'] = pd.to_datetime(twitter_data['date'],infer_datetime_format='%Y-%m-%d')
+            twitter_data['date'] = pd.to_datetime(twitter_data['date'])
             twitter_data = twitter_data.loc[(twitter_data['date'] >= from_date) & (twitter_data['date'] <= to_date)]
             #Reddit
             reddit_data = pd.DataFrame(db.get_data_table('Reddit_Data'))
@@ -69,7 +69,8 @@ def get_data(menuCanvas, color):
         menuCanvas.create_window(948, 27, window=toTrainingCanvas, tags='button')
 
         img = ImageTk.PhotoImage(Image.open('./assets/images/btnStartTraining.png'))
-        btn = Button(toTrainingCanvas, command=partial(start_training, menuCanvas), bg=color['primary'], bd=0, highlightthickness=0, image=img, activebackground=color['primary'])
+        btn = Button(toTrainingCanvas, command=partial(start_training,menuCanvas), bg=color['primary'], bd=0, highlightthickness=0, image=img, activebackground=color['primary'])
+        #btn = Button(toTrainingCanvas, command=select_data, bg=color['primary'], bd=0, highlightthickness=0, image=img, activebackground=color['primary'])
         btn.image = img
         btn.place(x=0, y=0)
 
