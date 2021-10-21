@@ -3,7 +3,8 @@ from modules.ui_main import ui
 
 # Window
 root = Tk()
-root.geometry('1280x720')
+root.overrideredirect(True)
+root.geometry('1280x720+25+20')
 root['bg'] = '#282c34'
 
 # Display Interface
