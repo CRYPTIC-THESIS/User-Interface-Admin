@@ -70,6 +70,29 @@ def get_data(menuCanvas, color):
 
     # Proceed command
     def proceed():
+        global crypto_data_list, source_data_list
+        global from_this_date, until_this_date
+
+        crypto_data_list = []
+        for item in crypto_list:
+            if item.get() != "":
+                crypto_data_list.append(item.get())
+        print("Crypto: ", crypto_data_list)
+
+
+        source_data_list = []
+        for item in source_list:
+            if item.get() != "":
+                source_data_list.append(item.get())
+        print("Sources: ", source_data_list)
+
+
+        from_this_date = from_date.get()
+        until_this_date = until_date.get()
+        print("From: ",from_this_date)
+        print("Until: ",until_this_date)
+
+
         # Treeview
         tbldataset = treeview('', 590, 450, 671, 285, dashCanvas)
 
