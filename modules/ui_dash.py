@@ -35,7 +35,6 @@ def dashboard(menuCanvas, color):
             pass
 
 
-
     # Selected Cryptocurrency command
     def get_crypto(i):
         def select_button():
@@ -58,28 +57,34 @@ def dashboard(menuCanvas, color):
                 selected_crypto = 'BTC'
                 print('btc dash')
                 currPriceCanvas.delete('all')
+                dashCanvas.delete('crypto')
                 history_card(menuCanvas, color)
                 currPriceCanvas.delete('btc')
                 btc_card = TkinterCustomButton(master=currPriceCanvas, hover=False, text='', width=418, height=35.38, corner_radius=10, bg_color=color['light'], fg_color=color['cyan'])
                 currPriceCanvas.create_window(209, 17, window=btc_card, tags=('btc',))
+                img1.configure(bg=color['cyan'])
             
             elif i == 2:
                 selected_crypto = 'ETH'
                 print('eth dash')
+                dashCanvas.delete('crypto')
                 currPriceCanvas.delete('all')
                 history_card(menuCanvas, color)
                 currPriceCanvas.delete('eth')
                 eth_card = TkinterCustomButton(master=currPriceCanvas, hover=False, text='', width=418, height=35.38, corner_radius=10, bg_color=color['light'], fg_color=color['cyan'])
                 currPriceCanvas.create_window(209, 61, window=eth_card, tags=('eth',))
+                img2.configure(bg=color['cyan'])
 
             else:
                 selected_crypto = 'DOGE'
                 print('doge dash')
+                dashCanvas.delete('crypto')
                 currPriceCanvas.delete('all')
                 history_card(menuCanvas, color)
                 currPriceCanvas.delete('doge')
                 doge_card = TkinterCustomButton(master=currPriceCanvas, hover=False, text='', width=418, height=35.38, corner_radius=10, bg_color=color['light'], fg_color=color['cyan'])
                 currPriceCanvas.create_window(209, 105, window=doge_card, tags=('doge',))
+                img3.configure(bg=color['cyan'])
 
 
             def default_btn(canvas, text_color, command):
@@ -431,6 +436,25 @@ def history_card(menuCanvas, color):
     currPriceCanvas.create_window(209, 17, window=btc_card, tags=('btc',))
     currPriceCanvas.create_window(209, 61, window=eth_card, tags=('eth',))
     currPriceCanvas.create_window(209, 105, window=doge_card, tags=('doge',))
+
+    global img1, img2, img3
+    img = Image.open("./assets/images/imgBitcoin.png")
+    test = ImageTk.PhotoImage(img, master=dashCanvas)
+    img1 = Label(dashCanvas, image=test, bg='#41464E')
+    img1.image = test
+    dashCanvas.create_window(587,52, anchor=NW, window=img1, tags=('img1', 'crypto'))
+
+    img = Image.open("./assets/images/imgEthereum.png")
+    test = ImageTk.PhotoImage(img, master=dashCanvas)
+    img2 = Label(dashCanvas, image=test, bg='#41464E')
+    img2.image = test
+    dashCanvas.create_window(587,96, anchor=NW, window=img2, tags=('img2', 'crypto'))
+
+    img = Image.open("./assets/images/imgDoge.png")
+    test = ImageTk.PhotoImage(img, master=dashCanvas)
+    img3 = Label(dashCanvas, image=test, bg='#41464E')
+    img3.image = test
+    dashCanvas.create_window(587,140, anchor=NW, window=img3, tags=('img3', 'crypto'))
 
     Label(dashCanvas, text='HISTORY', font=("Segoe UI bold", 12), bg=color['light'],
             fg=color['white']).place(x=578, y=193)

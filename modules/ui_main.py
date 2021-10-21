@@ -109,6 +109,10 @@ def sidebarMenu(root):
             global menuCanvas
             menuCanvas = Canvas(root, bg=color['primary'], width=1073, height=643, highlightthickness=0)
             menuCanvas.place(x=197,y=67)
+            # crypto_data_list = [] 
+            # source_data_list = [] 
+            # from_this_date = ''
+            # until_this_date = ''
     
             if i == 0:
                 dashboard(menuCanvas, color)

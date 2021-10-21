@@ -15,6 +15,13 @@ def train(menuCanvas, color):
     menuCanvas.delete('all')
     print('Train')
 
+    # global crypto_data_list, source_data_list
+    # global from_this_date, until_this_date
+    # crypto_data_list = [] 
+    # source_data_list = [] 
+    # from_this_date = ''
+    # until_this_date = ''
+
     menuCanvas.create_text(78, 28, text='TRAIN', font=("Segoe UI bold", 20), fill=color['white'])
 
     global dashCanvas
@@ -23,6 +30,7 @@ def train(menuCanvas, color):
 
     # Display Get Data
     get_data(menuCanvas, color)
+
 
 #Selection of Data
 def select_data(crypto, source, from_date, to_date):
@@ -43,7 +51,6 @@ def select_data(crypto, source, from_date, to_date):
             twitter['date'] = pd.to_datetime(twitter['date'])
             twitter = twitter.loc[(twitter['date'] >= from_date) & (twitter['date'] <= to_date)]
             twitter.columns=['Date', item]
-            # print(twitter)
             # df = pd.concat([df, twitter], ignore_index=True)
             df = pd.merge(df, twitter, how='outer', on='Date')
         
@@ -91,10 +98,6 @@ def select_data(crypto, source, from_date, to_date):
     df.insert(0, "Cryptocurrency", crypto_, True)
 
     print('dataframe', df)
-
-    # final_df = pd.DataFrame(columns=["Date", "High", "Low", "Open Price", "Closing Price", "Twitter_Data", "Reddit_Data", "Google_Data"])
-    # final_df = pd.merge([crypto_data,twitter,reddit,google],axis = 1)
-    # print(final_df)
     return df
 
 
@@ -127,15 +130,6 @@ def get_data(menuCanvas, color):
 
         source_data_list = []
         for item in source_list:
-            # if item.get() == 'CoinDesk Historical Data':
-            #     for crypto in crypto_data_list:
-            #         if crypto == 'BITCOIN':
-            #             source_data_list.append('Bitcoin_data')
-            #         elif crypto == 'ETHEREUM':
-            #             source_data_list.append('Ethereum_data')
-            #         elif crypto == 'DOGECOIN':
-            #             source_data_list.append('Dogecoin_data')
-            # el
             if item.get() != "":
                 source_data_list.append(item.get())
         print("Sources: ", source_data_list)
@@ -180,6 +174,8 @@ def get_data(menuCanvas, color):
         #btn = Button(toTrainingCanvas, command=select_data, bg=color['primary'], bd=0, highlightthickness=0, image=img, activebackground=color['primary'])
         btn.image = img
         btn.place(x=0, y=0)
+
+        print(crypto_data_list, source_data_list, from_this_date, until_this_date)
 
     
     # Cancel command
