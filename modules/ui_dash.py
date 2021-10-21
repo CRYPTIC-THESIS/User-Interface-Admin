@@ -15,7 +15,6 @@ from assets.elements.treeview import *
 
 
 def dashboard(menuCanvas, color):
-
     # Display Dashboard
     menuCanvas.delete('all')
     print('Dashboard')
@@ -30,46 +29,315 @@ def dashboard(menuCanvas, color):
         selected_date = pd.to_datetime(selected_date)
         print(selected_date)
 
+        try:
+            buttons[1].invoke()
+        except Exception:
+            pass
+
+
 
     # Selected Cryptocurrency command
     def get_crypto(i):
         def select_button():
-            
             # Dashboard content
-            global crypto, dashCanvas
+            global dashCanvas
             dashCanvas = Canvas(menuCanvas, bg=menuCanvas.cget('background'), width=1007, height=490, highlightthickness=0)
             menuCanvas.create_window(535, 365, window=dashCanvas)
 
-            # UI Cards
-            predicted_prices(menuCanvas, color)
+            predicted_card(menuCanvas, color)
             price_tbl(menuCanvas, color)
-            history(menuCanvas, color)
+            history_card(menuCanvas, color)
 
             if i == 0:
-                crypto = 'all'
+                selected_crypto = 'all'
                 print('all crypto dash')
+                currPriceCanvas.delete('all')
+                history_card(menuCanvas, color)
+
             elif i == 1:
-                crypto = 'btc'
+                selected_crypto = 'BTC'
                 print('btc dash')
+                currPriceCanvas.delete('all')
+                history_card(menuCanvas, color)
+                currPriceCanvas.delete('btc')
+                btc_card = TkinterCustomButton(master=currPriceCanvas, hover=False, text='', width=418, height=35.38, corner_radius=10, bg_color=color['light'], fg_color=color['cyan'])
+                currPriceCanvas.create_window(209, 17, window=btc_card, tags=('btc',))
+            
             elif i == 2:
-                crypto = 'eth'
+                selected_crypto = 'ETH'
                 print('eth dash')
+                currPriceCanvas.delete('all')
+                history_card(menuCanvas, color)
+                currPriceCanvas.delete('eth')
+                eth_card = TkinterCustomButton(master=currPriceCanvas, hover=False, text='', width=418, height=35.38, corner_radius=10, bg_color=color['light'], fg_color=color['cyan'])
+                currPriceCanvas.create_window(209, 61, window=eth_card, tags=('eth',))
+
             else:
-                crypto = 'doge'
+                selected_crypto = 'DOGE'
                 print('doge dash')
+                currPriceCanvas.delete('all')
+                history_card(menuCanvas, color)
+                currPriceCanvas.delete('doge')
+                doge_card = TkinterCustomButton(master=currPriceCanvas, hover=False, text='', width=418, height=35.38, corner_radius=10, bg_color=color['light'], fg_color=color['cyan'])
+                currPriceCanvas.create_window(209, 105, window=doge_card, tags=('doge',))
 
 
-            # Predicted Prices
-            # /////////////////////////////
-            btnCanvas = Canvas(dashCanvas, bg=color['light'], width=231, height=26, highlightthickness=0)
-            btnCanvas.place(x=273, y=14)
-            prices(menuCanvas, btnCanvas, color, color['cyan'], 'prediction')
+            def default_btn(canvas, text_color, command):
+                canvas.delete('all')
+
+                closing = TkinterCustomButton(master=canvas, text='Closing', text_font=("Segoe UI semibold", 11), corner_radius=32,
+                            width=86, height=26, text_color=text_color, bg_color=color['light'], fg_color=color['light'],
+                            hover_color='white', command=partial(command, canvas, text_color, 0))
+                
+                high = TkinterCustomButton(master=canvas, text='High', text_font=("Segoe UI semibold", 11), corner_radius=32,
+                            width=65, height=26, text_color=text_color, bg_color=color['light'], fg_color=color['light'],
+                            hover_color='white', command=partial(command, canvas, text_color, 1))
+
+                low = TkinterCustomButton(master=canvas, text='Low', text_font=("Segoe UI semibold", 11), corner_radius=32,
+                            width=60, height=26, text_color=text_color, bg_color=color['light'], fg_color=color['light'],
+                            hover_color='white', command=partial(command, canvas, text_color, 2))
+
+                canvas.create_window(43, 13, window=closing, tags='closing')
+                canvas.create_window(128.45, 13, window=high, tags='high')
+                canvas.create_window(201, 13, window=low, tags='low')
 
             
-            # History 
+            # Create Graph
+            # df2 - dataframe
+            # i - btn index
+            # w, h - width, height
+            # plot - 'Date'
+            # x, y - placement for graph
+            def graph(df2, i, w, h, plot, x, y):
+                figure2 = plt.Figure(figsize=(w, h), dpi=100, facecolor=color['light'])
+                ax2 = figure2.add_subplot(111)
+
+                if i == 2 or i == 3:
+                    df2.plot(x=plot, kind='line', legend=True, ax=ax2, color="#4ad29f", fontsize=7)
+                else:
+                    df2.plot(x=plot, kind='line', legend=True, ax=ax2, color="#4ad29f", marker='o',fontsize=7)
+
+                ax2.set_facecolor(color['light'])
+                ax2.xaxis.label.set_color('w')
+                ax2.yaxis.grid(color=color['dark'],linewidth=1)
+
+                for label in ax2.xaxis.get_ticklabels():
+                    label.set_color('w')
+                for label in ax2.yaxis.get_ticklabels():
+                    label.set_color('w')
+
+                ax2.spines['bottom'].set_color(color['dark'])
+                ax2.spines['top'].set_color(color['dark'])
+                ax2.spines['left'].set_color(color['dark'])
+                ax2.spines['right'].set_color(color['dark'])
+
+                line2 = FigureCanvasTkAgg(figure2, graph_canvas)
+                line2 = line2.get_tk_widget()
+                graph_canvas.create_window(x, y, window=line2, anchor=NW, tags=('graph',))
+
+            
+            # Predicted Prices
+            def predicted(canvas, text_color, i):
+                global price
+                # Button Activate
+                if i == 0:
+                    price = 'Closing'
+                    default_btn(canvas, text_color, predicted)
+                    canvas.delete(price)
+                    closing = TkinterCustomButton(master=canvas, text='Closing', text_font=("Segoe UI semibold", 11), corner_radius=32,
+                            width=86, height=26, text_color=text_color, bg_color=color['light'], fg_color='white',
+                            hover_color='white', command=partial(predicted, canvas, text_color, 0))
+                    canvas.create_window(43, 13, window=closing, tags='closing')
+
+                elif i == 1:
+                    price = 'High'
+                    default_btn(canvas, text_color, predicted)
+                    canvas.delete(price)
+                    high = TkinterCustomButton(master=canvas, text='High', text_font=("Segoe UI semibold", 11), corner_radius=32,
+                            width=65, height=26, text_color=text_color, bg_color=color['light'], fg_color='white',
+                            hover_color='white', command=partial(predicted, canvas, text_color, 1))
+                    canvas.create_window(128.45, 13, window=high, tags='high')
+
+                else:
+                    price = 'Low'
+                    default_btn(canvas, text_color, predicted)
+                    canvas.delete(price)
+                    low = TkinterCustomButton(master=canvas, text='Low', text_font=("Segoe UI semibold", 11), corner_radius=32,
+                            width=60, height=26, text_color=text_color, bg_color=color['light'], fg_color='white',
+                            hover_color='white', command=partial(predicted, canvas, text_color, 2))
+                    canvas.create_window(201, 13, window=low, tags='low')
+
+
+            btnCanvas = Canvas(dashCanvas, bg=color['light'], width=231, height=26, highlightthickness=0)
+            btnCanvas.place(x=273, y=14)
+            default_btn(btnCanvas, color['cyan'], predicted)
+            predicted(btnCanvas, color['cyan'], 0)
+
+
+            # History
+            def history(canvas, text_color, i):
+                global price
+                # Button Activate
+                if i == 0:
+                    price = 'Closing'
+                    default_btn(canvas, text_color, history)
+                    canvas.delete(price)
+                    closing = TkinterCustomButton(master=canvas, text='Closing', text_font=("Segoe UI semibold", 11), corner_radius=32,
+                            width=86, height=26, text_color=text_color, bg_color=color['light'], fg_color='white',
+                            hover_color='white', command=partial(history, canvas, text_color, 0))
+                    canvas.create_window(43, 13, window=closing, tags='closing')
+
+                elif i == 1:
+                    price = 'High'
+                    default_btn(canvas, text_color, history)
+                    canvas.delete(price)
+                    high = TkinterCustomButton(master=canvas, text='High', text_font=("Segoe UI semibold", 11), corner_radius=32,
+                            width=65, height=26, text_color=text_color, bg_color=color['light'], fg_color='white',
+                            hover_color='white', command=partial(history, canvas, text_color, 1))
+                    canvas.create_window(128.45, 13, window=high, tags='high')
+
+                else:
+                    price = 'Low'
+                    default_btn(canvas, text_color, history)
+                    canvas.delete(price)
+                    low = TkinterCustomButton(master=canvas, text='Low', text_font=("Segoe UI semibold", 11), corner_radius=32,
+                            width=60, height=26, text_color=text_color, bg_color=color['light'], fg_color='white',
+                            hover_color='white', command=partial(history, canvas, text_color, 2))
+                    canvas.create_window(201, 13, window=low, tags='low')
+
+
+                # Selected History days
+                # //////////////////////////////
+                def select(btn, i):
+                    def select_button():
+                        for other_btn in buttons:
+                            deactivate(other_btn)
+                        btn.config(bg=color['purple'], activebackground=color['purple'])
+
+                        # Get history
+                        if i == 0:
+                            days = 3
+                        elif i == 1:
+                            days = 7
+                        elif i == 2:
+                            days = 30
+                        else:
+                            days = 365
+
+                        global past
+                        past = selected_date - timedelta(days=days)
+                        print(past)
+
+
+                        # Dataframe
+                        my_df = pd.DataFrame()
+                        btc_df = pd.DataFrame()
+                        eth_df = pd.DataFrame()
+                        doge_df = pd.DataFrame()
+                        
+                        crypto_data = [ 'Bitcoin_Data', 'Ethereum_Data', 'Dogecoin_Data']
+                        # crypto = []
+
+                        if selected_crypto == 'all':
+                            crypto = []
+                            for j, crypto_ in enumerate(crypto_data):
+                                db_data = pd.DataFrame(db.get_data_table(crypto_))
+                                db_data['date'] = pd.to_datetime(db_data['date'])
+                                db_data = db_data.loc[(db_data['date'] >= past) & (db_data['date'] <= selected_date)]
+
+                                for rows in range(len(db_data)):
+                                    if j == 0:
+                                        crypto.append('BTC')
+                                    elif j == 1:
+                                        crypto.append('ETH')
+                                    else:
+                                        crypto.append('DOGE')
+
+                                my_df = pd.concat([my_df,db_data], ignore_index=True)
+
+                                if j == 0:
+                                    btc_df = db_data
+                                elif j == 1:
+                                    eth_df = db_data
+                                else:
+                                    doge_df = db_data
+
+                            my_df.insert(0, "Cryptocurrency", crypto, True)
+                            my_df.columns = [ 'Cryptocurrency', 'Date', "High", "Low", "Open", "Closing"]
+                            print(my_df.head(10))
+
+                            df = my_df[['Cryptocurrency', 'Date', price]].copy(deep=True)
+                            print(df.head(10))
+                        
+                        else:
+                            if selected_crypto == 'BTC':
+                                j = 0
+                            elif selected_crypto == 'ETH':
+                                j = 1
+                            else:
+                                j = 2
+                            
+                            crypto = []
+                            db_data = pd.DataFrame(db.get_data_table(crypto_data[j]))
+                            db_data['date'] = pd.to_datetime(db_data['date'])
+                            db_data = db_data.loc[(db_data['date'] >= past) & (db_data['date'] <= selected_date)]
+
+                            for rows in range(len(db_data)):
+                                if j == 0:
+                                    crypto.append('BTC')
+                                elif j == 1:
+                                    crypto.append('ETH')
+                                else:
+                                    crypto.append('DOGE')
+
+                            my_df = pd.concat([my_df,db_data], ignore_index=True)
+
+                            my_df.insert(0, "Cryptocurrency", crypto, True)
+                            my_df.columns = [ 'Cryptocurrency', 'Date', "High", "Low", "Open", "Closing"]
+                            print(my_df.head(10))
+
+                            df = my_df[['Cryptocurrency', 'Date', price]].copy(deep=True)
+                            print(df.head(10))
+
+                            
+                            df[price] = pd.to_numeric(df[price])
+                            df2 = df[['Date',price]]
+                            x = 'Date'
+                            print('df2')
+                                
+                            graph(df2, i, 4.6, 2.35, x, -15, -23)
+                        
+                        
+                    return select_button
+
+                def deactivate(btn):
+                    btn.config(bg='#41464E', activebackground=color['purple'])
+
+                # Buttons
+                dayBtnCanvas = Canvas(dashCanvas, bg=color['light'], width=170, height=27, highlightthickness=0)
+                dayBtnCanvas.place(x=582, y=445)
+                list_ = ['3D', '1W', '1M', '1Y']
+                buttons = []
+
+                x=0
+                for i, name in enumerate(list_, 0):
+                    btn = Button(dayBtnCanvas, text=name, font=("Segoe UI bold", 10), width=3, bd=0, highlightthickness=0, 
+                                    foreground=color['white'], activeforeground=color['white']) 
+                    btn['command'] = select(btn, i)
+                    btn.place(x=x, y=0)
+                    buttons.append(btn)
+                    x+=35
+                buttons[0].invoke()
+
+
+            # Graph canvas
+            graph_canvas = Canvas(dashCanvas, width=412, height=207, highlightthickness=0, bg=color['purple'])
+            dashCanvas.create_window(574, 230, anchor=NW, window=graph_canvas)
+
             btnCanvas = Canvas(dashCanvas, bg=color['light'], width=231, height=26, highlightthickness=0)
             btnCanvas.place(x=758, y=194)
-            prices(menuCanvas, btnCanvas, color, color['purple'], 'history')
+            default_btn(btnCanvas, color['cyan'], history)
+            history(btnCanvas, color['purple'], 0)
 
         return select_button
 
@@ -116,201 +384,11 @@ def dashboard(menuCanvas, color):
         buttons.append(btn)
         x+=65
     # /////// All cryptocurrency dashboard
-    buttons[0].invoke()
-
-
-# ----------- GRAPHS ------------
-def prices(menuCanvas, canvas, color, text_color, card):
-    
-    # Get Price command
-    def get_price(i):
-        global prices
-        # Button Activate
-        if i == 0:
-            price = 'closing'
-            default_btn()
-            canvas.delete(price)
-            closing = TkinterCustomButton(master=canvas, text='Closing', text_font=("Segoe UI semibold", 11), corner_radius=32,
-                    width=86, height=26, text_color=text_color, bg_color=color['light'], fg_color='white',
-                    hover_color='white', command=partial(get_price, 0))
-            canvas.create_window(43, 13, window=closing, tags='closing')
-
-            # Get data for closing price
-
-        elif i == 1:
-            price = 'high'
-            default_btn()
-            canvas.delete(price)
-            high = TkinterCustomButton(master=canvas, text='High', text_font=("Segoe UI semibold", 11), corner_radius=32,
-                    width=65, height=26, text_color=text_color, bg_color=color['light'], fg_color='white',
-                    hover_color='white', command=partial(get_price, 1))
-            canvas.create_window(128.45, 13, window=high, tags='high')
-
-            # Get data for high price
-
-        else:
-            price = 'low'
-            default_btn()
-            canvas.delete(price)
-            low = TkinterCustomButton(master=canvas, text='Low', text_font=("Segoe UI semibold", 11), corner_radius=32,
-                    width=60, height=26, text_color=text_color, bg_color=color['light'], fg_color='white',
-                    hover_color='white', command=partial(get_price, 2))
-            canvas.create_window(201, 13, window=low, tags='low')
-
-            # Get data for low price
-
-
-    # Closing, High, Low buttons
-    def default_btn():
-        canvas.delete('all')
-
-        closing = TkinterCustomButton(master=canvas, text='Closing', text_font=("Segoe UI semibold", 11), corner_radius=32,
-                    width=86, height=26, text_color=text_color, bg_color=color['light'], fg_color=color['light'],
-                    hover_color='white', command=partial(get_price, 0))
-        
-        high = TkinterCustomButton(master=canvas, text='High', text_font=("Segoe UI semibold", 11), corner_radius=32,
-                    width=65, height=26, text_color=text_color, bg_color=color['light'], fg_color=color['light'],
-                    hover_color='white', command=partial(get_price, 1))
-
-        low = TkinterCustomButton(master=canvas, text='Low', text_font=("Segoe UI semibold", 11), corner_radius=32,
-                    width=60, height=26, text_color=text_color, bg_color=color['light'], fg_color=color['light'],
-                    hover_color='white', command=partial(get_price, 2))
-
-        canvas.create_window(43, 13, window=closing, tags='closing')
-        canvas.create_window(128.45, 13, window=high, tags='high')
-        canvas.create_window(201, 13, window=low, tags='low')
-    default_btn()
-    get_price(0)
-
-    global graph_canvas
-    
-    # Predicted Prices
-    # ///////////////////////
-    if card == 'prediction':
-        # Graph Canvas
-        graph_canvas = Canvas(dashCanvas, width=496, height=210, highlightthickness=0, bg="#425393")
-        dashCanvas.create_window(20, 50, anchor=NW, window=graph_canvas)
-
-
-        # Slider
-        slider_canvas = Canvas(dashCanvas, width=250, height=40, highlightthickness=0, bg=color['light'])#
-        slider_canvas.place(x=25, y=260)
-
-        current_value = DoubleVar()
-        days = 1
-
-        tblprice = treeview('Predicted ____ Price', 490, 110, 267, 408, dashCanvas)
-
-        def get_current_value():
-            return '{: .2f}'.format(current_value.get())
-
-        def slider_changed(event):
-            days = int(round(float(get_current_value())))
-            print(days)
-
-            # Display Graph and Table contents
-            
-
-        Label(slider_canvas,text='Days:', font=("Segoe UI semibold", 10), bg=color['light'] , fg='white').place(x=0, y=16)
-
-        Scale(slider_canvas, from_=1, to=14, orient='horizontal', sliderrelief='flat', variable=current_value, bg=color['light'],
-                command=slider_changed,length=205, fg='white', troughcolor=color['cyan'], highlightthickness=0).place(x=40, y=0)
-
-
-    # History
-    # ///////////////////////
-    else:
-        # Graph Canvas
-        graph_canvas = Canvas(dashCanvas, width=412, height=207, highlightthickness=0, bg="#425393")
-        dashCanvas.create_window(574, 230, anchor=NW, window=graph_canvas)
-
-
-        # Buttons
-        dayBtnCanvas = Canvas(dashCanvas, bg=color['light'], width=170, height=27, highlightthickness=0)
-        dayBtnCanvas.place(x=582, y=445)
-
-        #data = db.get_data_table('Twitter_Data')
-
-        def select(btn , i):
-            def select_button():
-                for other_btn in buttons:
-                    deactivate(other_btn)
-                btn.config(bg=color['purple'], activebackground=color['purple'])
-
-                # Get history
-                if i == 0:
-                    days = 3
-                elif i == 1:
-                    days = 7
-                elif i == 2:
-                    days = 30
-                else:
-                    days = 365
-
-                global past
-                past = selected_date - timedelta(days=days)
-                print(past)
-
-                # Get dataframe
-
-                # Get Graph
-
-                
-            return select_button
-
-        def deactivate(btn):
-            btn.config(bg='#41464E', activebackground=color['purple'])
-
-        list_ = ['3D', '1W', '1M', '1Y']
-        buttons = []
-
-        x=0
-        for i, name in enumerate(list_, 0):
-            btn = Button(dayBtnCanvas, text=name, font=("Segoe UI bold", 10), width=3, bd=0, highlightthickness=0, 
-                            foreground=color['white'], activeforeground=color['white']) 
-            btn['command'] = select(btn , i)
-            btn.place(x=x, y=0)
-            buttons.append(btn)
-            x+=35
-        buttons[0].invoke()
-    
-
-# Create Graph
-# df2 - dataframe
-# i - btn index
-# w, h - width, height
-# plot - 'Date'
-# x, y - placement for graph
-def graph(df2, i, w, h, plot, x, y):
-    figure2 = plt.Figure(figsize=(w, h), dpi=100, facecolor="#425393")
-    ax2 = figure2.add_subplot(111)
-
-    if i == 2 or i == 3:
-        df2.plot(x=plot, kind='line', legend=True, ax=ax2, color="#4ad29f", fontsize=10)
-    else:
-        df2.plot(x=plot, kind='line', legend=True, ax=ax2, color="#4ad29f", marker='o',fontsize=10)
-
-    ax2.set_facecolor("#425393")
-    ax2.xaxis.label.set_color('w')
-    ax2.yaxis.grid(color="#5E6FAF",linewidth=1)
-
-    for label in ax2.xaxis.get_ticklabels():
-        label.set_color('w')
-    for label in ax2.yaxis.get_ticklabels():
-        label.set_color('w')
-
-    ax2.spines['bottom'].set_color("#202D42")
-    ax2.spines['top'].set_color("#425393")
-    ax2.spines['left'].set_color("#202D42")
-    ax2.spines['right'].set_color("#425393")
-
-    line2 = FigureCanvasTkAgg(figure2, graph_canvas)
-    line2 = line2.get_tk_widget()
-    graph_canvas.create_window(x, y, window=line2, tags=('graph',))
+    buttons[1].invoke()
 
 
 # ----------- CARDS -------------
-def predicted_prices(menuCanvas, color):
+def predicted_card(menuCanvas, color):
     img = Image.open("./assets/images/Base.png")
     img = img.resize((533, 311), Image.ANTIALIAS)
     test = ImageTk.PhotoImage(img, master=dashCanvas)
@@ -329,7 +407,7 @@ def price_tbl(menuCanvas, color):
     base1.image = test
     base1.place(x=0, y=332)
 
-def history(menuCanvas, color):
+def history_card(menuCanvas, color):
     img = Image.open("./assets/images/Base1.png")
     img = img.resize((450, 486), Image.ANTIALIAS)
     test = ImageTk.PhotoImage(img, master=dashCanvas)
@@ -342,6 +420,7 @@ def history(menuCanvas, color):
     Label(dashCanvas, text='CURRENT PRICE', font=("Segoe UI bold", 12), bg=color['light'],
             fg=color['white']).place(x=578, y=13)
     
+    global currPriceCanvas
     currPriceCanvas = Canvas(dashCanvas, bg=color['light'], width=418.34, height=123, highlightthickness=0)
     dashCanvas.create_window(782, 110, window=currPriceCanvas)
     
@@ -349,9 +428,9 @@ def history(menuCanvas, color):
     eth_card = TkinterCustomButton(master=currPriceCanvas, hover=False, text='', width=418, height=35.38, corner_radius=10, bg_color=color['light'], fg_color='#41464E')
     doge_card = TkinterCustomButton(master=currPriceCanvas, hover=False, text='', width=418, height=35.38, corner_radius=10, bg_color=color['light'], fg_color='#41464E')
 
-    currPriceCanvas.create_window(209, 17, window=btc_card, tags='btc')
-    currPriceCanvas.create_window(209, 61, window=eth_card, tags='eth')
-    currPriceCanvas.create_window(209, 105, window=doge_card, tags='doge')
+    currPriceCanvas.create_window(209, 17, window=btc_card, tags=('btc',))
+    currPriceCanvas.create_window(209, 61, window=eth_card, tags=('eth',))
+    currPriceCanvas.create_window(209, 105, window=doge_card, tags=('doge',))
 
     Label(dashCanvas, text='HISTORY', font=("Segoe UI bold", 12), bg=color['light'],
             fg=color['white']).place(x=578, y=193)
