@@ -60,8 +60,10 @@ def customTitlebar(root):
     def minimize_me(event):
         # minimize_button['bg']='blue'
         root.update_idletasks()
+        root.update()
         root.overrideredirect(False)
-        root.state('iconic')
+        # root.state('iconic')
+        root.iconify()
 
     def get_pos(event):
         xwin = root.winfo_x()

@@ -25,33 +25,78 @@ def train(menuCanvas, color):
     get_data(menuCanvas, color)
 
 #Selection of Data
-def select_data():
+def select_data(crypto, source, from_date, to_date):
     print('Hello Select Data')
-    selected_crypto = 'Bitcoin'
-    selected_sources = 'Bitcoin_Data, Twitter_Data, Reddit_Data, Google_Data'
-    from_date = '2020-02-01'
-    to_date = '2020-02-29'
-    if (selected_crypto=='Bitcoin'):
-        crypto_data = pd.DataFrame(db.get_data_table('Bitcoin_Data'))
-        crypto_data['date'] = pd.to_datetime(crypto_data['date'])
-        crypto_data = crypto_data.loc[(crypto_data['date'] >= from_date) & (crypto_data['date'] <= to_date)]
-        if (selected_sources == 'Bitcoin_Data, Twitter_Data, Reddit_Data, Google_Data'):
-            #Twitter
-            twitter_data = pd.DataFrame(db.get_data_table('Twitter_Data'))
-            twitter_data['date'] = pd.to_datetime(twitter_data['date'])
-            twitter_data = twitter_data.loc[(twitter_data['date'] >= from_date) & (twitter_data['date'] <= to_date)]
-            #Reddit
-            reddit_data = pd.DataFrame(db.get_data_table('Reddit_Data'))
-            reddit_data['date'] = pd.to_datetime(reddit_data['date'])
-            reddit_data = reddit_data.loc[(reddit_data['date'] >= from_date) & (reddit_data['date'] <= to_date)]
-            #Google
-            google_data = pd.DataFrame(db.get_data_table('Google_Data'))
-            google_data['date'] = pd.to_datetime(google_data['date'])
-            google_data = google_data.loc[(google_data['date'] >= from_date) & (google_data['date'] <= to_date)]
 
-            final_df = pd.concat([crypto_data,twitter_data[['btc']],reddit_data[['btc']],google_data[['btc']]],axis = 1)
-            final_df.columns = ["Date", "High", "Low", "Open Price", "Closing Price", "Twitter_Data", "Reddit_Data", "Google_Data"]
-            print(final_df)
+    df = pd.DataFrame(columns=['Date'])
+
+    table_name = {
+        'BITCOIN': 'btc', 'ETHEREUM': 'eth', 'DOGECOIN': 'doge',
+        'Bitcoin_data': 'Bitcoin_Data', 'Ethereum_data': 'Ethereum_Data', 'Dogecoin_data': 'Dogecoin_Data',
+        'Twitter Volume': 'Twitter_Data', 'Reddit Volume': 'Reddit_Data', 'Google Trends': 'Google_Data'
+    }
+    
+    for item in source:
+        if item == 'Twitter Volume':
+            twitter = pd.DataFrame(db.get_data_table(table_name[item]))
+            twitter = twitter[['date', table_name[crypto]]]
+            twitter['date'] = pd.to_datetime(twitter['date'])
+            twitter = twitter.loc[(twitter['date'] >= from_date) & (twitter['date'] <= to_date)]
+            twitter.columns=['Date', item]
+            # print(twitter)
+            # df = pd.concat([df, twitter], ignore_index=True)
+            df = pd.merge(df, twitter, how='outer', on='Date')
+        
+        elif item == 'Reddit Volume':
+            reddit = pd.DataFrame(db.get_data_table(table_name[item]))
+            reddit = reddit[['date', table_name[crypto]]]
+            reddit['date'] = pd.to_datetime(reddit['date'])
+            reddit = reddit.loc[(reddit['date'] >= from_date) & (reddit['date'] <= to_date)]
+            reddit.columns=['Date', item]
+            # df = pd.concat([df, reddit], ignore_index=True)
+            df = pd.merge(df, reddit, how='outer', on='Date')
+        
+        elif item == 'Google Trends':
+            google = pd.DataFrame(db.get_data_table(table_name[item]))
+            google = google[['date', table_name[crypto]]]
+            google['date'] = pd.to_datetime(google['date'])
+            google = google.loc[(google['date'] >= from_date) & (google['date'] <= to_date)]
+            google.columns=['Date', item]
+            # df = pd.concat([df, google], ignore_index=True)
+            df = pd.merge(df, google, how='outer', on='Date')
+        
+        elif item == 'CoinDesk Historical Data':
+            if table_name[crypto] == 'btc':
+                historical = 'Bitcoin_Data'
+            elif table_name[crypto] == 'eth':
+                historical = 'Ethereum_Data'
+            else:
+                historical = 'Dogecoin_Data'
+            crypto_data = pd.DataFrame(db.get_data_table(historical))
+            crypto_data['date'] = pd.to_datetime(crypto_data['date'])
+            crypto_data = crypto_data.loc[(crypto_data['date'] >= from_date) & (crypto_data['date'] <= to_date)]
+            crypto_data.columns=['Date', 'High', 'Low', 'Open', 'Closing']
+            # df = pd.concat([crypto_data, df], ignore_index=True)
+            df = pd.merge(crypto_data, df, how='outer', on='Date')
+
+    crypto_ = []
+    for rows in range(len(df)):
+        if table_name[crypto] == 'btc':
+            crypto_.append('BTC')
+        elif table_name[crypto] == 'eth':
+            crypto_.append('ETH')
+        else:
+            crypto_.append('DOGE')
+
+    df.insert(0, "Cryptocurrency", crypto_, True)
+
+    print('dataframe', df)
+
+    # final_df = pd.DataFrame(columns=["Date", "High", "Low", "Open Price", "Closing Price", "Twitter_Data", "Reddit_Data", "Google_Data"])
+    # final_df = pd.merge([crypto_data,twitter,reddit,google],axis = 1)
+    # print(final_df)
+    return df
+
 
 # Get Data
 def get_data(menuCanvas, color):
@@ -82,6 +127,15 @@ def get_data(menuCanvas, color):
 
         source_data_list = []
         for item in source_list:
+            # if item.get() == 'CoinDesk Historical Data':
+            #     for crypto in crypto_data_list:
+            #         if crypto == 'BITCOIN':
+            #             source_data_list.append('Bitcoin_data')
+            #         elif crypto == 'ETHEREUM':
+            #             source_data_list.append('Ethereum_data')
+            #         elif crypto == 'DOGECOIN':
+            #             source_data_list.append('Dogecoin_data')
+            # el
             if item.get() != "":
                 source_data_list.append(item.get())
         print("Sources: ", source_data_list)
@@ -95,6 +149,27 @@ def get_data(menuCanvas, color):
 
         # Treeview
         tbldataset = treeview('', 590, 450, 671, 285, dashCanvas)
+
+        my_df = pd.DataFrame()
+        for crypto in crypto_data_list:
+            print(crypto)
+            my_df = pd.concat([my_df, select_data(crypto, source_data_list, from_this_date, until_this_date)], ignore_index=True)
+        print(my_df.head())
+        my_df['Date'] = my_df['Date'].dt.date
+
+        # Displaying the DataFrame
+        tbldataset["column"] = list(my_df.columns)
+        tbldataset["show"] = "headings"
+        for column in tbldataset["columns"]:
+            tbldataset.heading(column, text=column) 
+            tbldataset.column(column, width=165,anchor="center")
+
+        df_rows = my_df.to_numpy().tolist() 
+        for row in df_rows:
+            tbldataset.insert("", "end", values=row, tags=("row"))
+
+        tbldataset.tag_configure("row", foreground=color['white'])
+
 
         # Start Training button
         toTrainingCanvas = Canvas(menuCanvas, bg=menuCanvas.cget('background'), width=204, height=35, highlightthickness=0)
