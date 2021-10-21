@@ -1,16 +1,16 @@
+import pandas as pd
+import dbconnect as db
+
 from tkinter import *
 from PIL import ImageTk, Image
 from tkcalendar import DateEntry
-import pandas as pd
 from functools import partial
-
 from assets.elements.tkinter_custom_button import TkinterCustomButton
 from assets.elements.treeview import *
 
 
 # Display Train tab
 def train(menuCanvas, color):
-    
     menuCanvas.delete('all')
     print('Train')
 
@@ -23,6 +23,34 @@ def train(menuCanvas, color):
     # Display Get Data
     get_data(menuCanvas, color)
 
+#Selection of Data
+def select_data():
+    print('Hello Select Data')
+    selected_crypto = 'Bitcoin'
+    selected_sources = 'Bitcoin_Data, Twitter_Data, Reddit_Data, Google_Data'
+    from_date = '2020-01-01'
+    to_date = '2020-01-31'
+    if (selected_crypto=='Bitcoin'):
+        crypto_data = pd.DataFrame(db.get_data_table('Bitcoin_Data'))
+        crypto_data['date'] = pd.to_datetime(crypto_data['date'])
+        crypto_data = crypto_data.loc[(crypto_data['date'] >= from_date) & (crypto_data['date'] <= to_date)]
+        if (selected_sources == 'Bitcoin_Data, Twitter_Data, Reddit_Data, Google_Data'):
+            #Twitter
+            twitter_data = pd.DataFrame(db.get_data_table('Twitter_Data'))
+            twitter_data['date'] = pd.to_datetime(twitter_data['date'],infer_datetime_format='%Y-%m-%d')
+            twitter_data = twitter_data.loc[(twitter_data['date'] >= from_date) & (twitter_data['date'] <= to_date)]
+            #Reddit
+            reddit_data = pd.DataFrame(db.get_data_table('Reddit_Data'))
+            reddit_data['date'] = pd.to_datetime(reddit_data['date'])
+            reddit_data = reddit_data.loc[(reddit_data['date'] >= from_date) & (reddit_data['date'] <= to_date)]
+            #Google
+            google_data = pd.DataFrame(db.get_data_table('Google_Data'))
+            google_data['date'] = pd.to_datetime(google_data['date'])
+            google_data = google_data.loc[(google_data['date'] >= from_date) & (google_data['date'] <= to_date)]
+
+            final_df = pd.concat([crypto_data,twitter_data[['btc']],reddit_data[['btc']],google_data[['btc']]],axis = 1)
+            final_df.columns = ["Date", "High", "Low", "Open Price", "Closing Price", "Twitter_Data", "Reddit_Data", "Google_Data"]
+            print(final_df)
 
 # Get Data
 def get_data(menuCanvas, color):
@@ -41,7 +69,7 @@ def get_data(menuCanvas, color):
         menuCanvas.create_window(948, 27, window=toDataCanvas, tags='button')
 
         img = ImageTk.PhotoImage(Image.open('./assets/images/btnDataAnalysis.png'))
-        btn = Button(toDataCanvas, command=partial(data_analysis, menuCanvas), bg=color['primary'], bd=0, highlightthickness=0, image=img, activebackground=color['primary'])
+        btn = Button(toDataCanvas, bg=color['primary'], bd=0, highlightthickness=0, image=img, activebackground=color['primary'], command= select_data) #<=== Changed command
         btn.image = img
         btn.place(x=0, y=0)
 
