@@ -2,7 +2,7 @@ import firebase_admin
 import pandas as pd
 from firebase_admin import firestore 
 from firebase_admin import db
-
+from datetime import date as dt
 # Fetch the service account key JSON file contents
 cred = firebase_admin.credentials.Certificate('cryptic-database-firebase-adminsdk-bv1yi-dfd68e9690.json')
 
@@ -24,6 +24,7 @@ def insert_trend_csv(tbl_name,csv_path):
     
     })
     print(csv_path+" Successdully Imported")
+
 def insert_crypto_csv(tbl_name,csv_path):
     ref = db.reference(tbl_name,default_app)
     df = pd.read_csv(csv_path)
@@ -43,6 +44,44 @@ def get_data_table(tbl_name):
     data = ref.get()
     data = pd.DataFrame(data)
     return data
+
+def update_trend(tbl_name,values):
+    ref = db.reference(tbl_name,default_app)
+    data = ref.get()
+    last_idx = len(data)
+    for i in range(len(values)):
+        users_ref = ref.child(str(last_idx+i))
+        users_ref.set({
+            'date':values['Date'],
+            'btc':values['bitcoin'], 
+            'eth':values['ethereum'], 
+            'doge':values['dogecoin']
+    
+    })
+    updated(tbl_name)
+    print("Successdully Added "+str(len(values))+ "rows to " + tbl_name)
+
+def update_crypto(tbl_name,values):
+    ref = db.reference(tbl_name,default_app)
+    data = ref.get()
+    last_idx = len(data)
+    for i in range(len(values)):
+        users_ref = ref.child(str(last_idx+i))
+        users_ref.set({
+                    'date':values['Date'],
+                    'price':values['Price'], 
+                    'open':values['Open'], 
+                    'high':values['High'],
+                    'low':values['Low']
+            })
+    updated(tbl_name)
+    print("Successdully Added "+str(len(values))+ "rows to " + tbl_name)
+
+def updated(tbl_name):
+    today = dt.today().strftime("%d-%m-%Y")
+    ref = db.reference('A_Last_Updated',default_app)
+    users_ref = ref.child(tbl_name)
+    users_ref.set(today)
 
 #insert_trend_csv('Twitter_Data','path of twitter data')
 #insert_trend_csv('Reddit_Data','path of reddit data')
