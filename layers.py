@@ -13,7 +13,7 @@ class progress:
 
 class ReLU:
     def __init__(self):
-        self.layer_name = "Activation ReLU"
+        self.layer_name = "Activation Layer"
 
     def forward(X):
         out = np.maximum(X, 0)
@@ -83,7 +83,7 @@ class Batch_norm:
 
         return out, cache
 
-    def batchnorm_backward_alt(dout, cache):
+    def backward(dout, cache):
         
         N = dout.shape[0]
         x_norm, x_centered, std, gamma = cache
@@ -106,15 +106,15 @@ class Conv:
         #why divide by 9...Xavier initialization
         self.filters = np.random.randn(num_filters, 2, 2)/4
     
-    def iterate_regions(self, image):
-        #generates all possible 3*3 image regions using valid padding
+    def iterate_regions(self, input):
+        #generates all possible 3*3 input regions using valid padding
         
-        h,w = image.shape
+        h,w = input.shape
         
         for i in range(h-2):
             for j in range(w-2):
-                im_region = image[i:(i+2), j:(j+2)]
-                yield im_region, i, j
+                in_region = input[i:(i+2), j:(j+2)]
+                yield in_region, i, j
                 
     def forward(self, input):
         self.last_input = input
@@ -123,8 +123,8 @@ class Conv:
         
         output = np.zeros((h-2, w-2, self.num_filters))
         
-        for im_regions, i, j in self.iterate_regions(input):
-            output[i, j] = np.sum(im_regions * self.filters, axis=(1,2))
+        for in_regions, i, j in self.iterate_regions(input):
+            output[i, j] = np.sum(in_regions * self.filters, axis=(1,2))
         print('Conv Block:',output.shape)
         return output
     
@@ -136,9 +136,9 @@ class Conv:
         '''
         d_l_d_filters = np.zeros(self.filters.shape)
 
-        for im_region, i, j in self.iterate_regions(self.last_input):
+        for in_region, i, j in self.iterate_regions(self.last_input):
             for f in range(self.num_filters):
-                d_l_d_filters[f] += d_l_d_out[i,j,f] * im_region
+                d_l_d_filters[f] += d_l_d_out[i,j,f] * in_region
 
         #update filters
         self.filters -= learn_rate * d_l_d_filters
@@ -440,4 +440,3 @@ class LSTM:
 
             #print('Approximate: \t%e, Exact: \t%e =>  Error: \t%e' % (grad_numerical, grad_analytical, rel_error))
         print("\nTest successful!")
-        return
