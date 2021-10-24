@@ -13,7 +13,7 @@ class progress:
 
 class ReLU:
     def __init__(self):
-        self.layer_name = "Activation Layer"
+        self.layer_name = "Activation Layer\t\t"
 
     def forward(X):
         out = np.maximum(X, 0)
@@ -27,7 +27,7 @@ class ReLU:
 
 class Dropout:
     def __init__(self):
-        self.layer_name = "Dropout Layer"
+        self.layer_name = "Dropout Layer\t\t\t"
 
     def forward(X, p_dropout):
         u = np.random.binomial(1, p_dropout, size=X.shape) / p_dropout
@@ -42,7 +42,7 @@ class Dropout:
 
 class Batch_norm:
     def __init__(self):
-        self.layer_name = 'Batch Normalization Layer'
+        self.layer_name = 'Batch Normalization Layer\t'
         self.param = {'mode':'','running_mean': 0,'running_var': 0}
         self.gamma = 1
         self.beta = 0
@@ -100,7 +100,7 @@ class Batch_norm:
 class Conv:
     
     def __init__(self, num_filters):
-        self.layer_name = 'Convolution 2D Layer'
+        self.layer_name = 'Convolution 2D Layer\t\t'
         self.num_filters = num_filters
         
         #why divide by 9...Xavier initialization
@@ -147,7 +147,7 @@ class Conv:
 
 class maxpool:
     def __init__(self):
-        self.layer_name = 'Maxpooling 2D Layer'
+        self.layer_name = 'Maxpooling 2D Layer\t\t'
 
     def forward(input, f=2, s=2):
         #Downsample input `input` using a kernel size of `f` and a stride of `s`
@@ -179,15 +179,15 @@ class maxpool:
         return downsampled
 
 class LSTM:
-    def __init__(self, value_to_idx, idx_to_value, vocab_size, n_h=100, seq_len=25,
+    def __init__(self, value_to_idx, idx_to_value, seq_size, n_h=100, seq_len=25,
                  epochs=10, lr=0.001, beta1=0.9, beta2=0.999):
         """
         Implementation of simple character-level LSTM using Numpy
         """
-        self.layer_name = 'LSTM Layer'
+        self.layer_name = 'LSTM Layer\t\t\t'
         self.value_to_idx = value_to_idx  # characters to indices mapping
         self.idx_to_value = idx_to_value  # indices to characters mapping
-        self.vocab_size = vocab_size  # no. of unique characters in the training data
+        self.seq_size = seq_size  # no. of unique characters in the training data
         self.n_h = n_h  # no. of units in the hidden layer
         self.seq_len = seq_len  # no. of time steps, also size of mini batch
         self.epochs = epochs  # no. of training iterations
@@ -197,28 +197,28 @@ class LSTM:
 
         # -----initialise weights and biases-----#
         self.params = {}
-        std = (1.0 / np.sqrt(self.vocab_size + self.n_h))  # Xavier initialisation
+        std = (1.0 / np.sqrt(self.seq_size + self.n_h))  # Xavier initialisation
 
         # forget gate
-        self.params["Wf"] = np.random.randn(self.n_h, self.n_h + self.vocab_size) * std
+        self.params["Wf"] = np.random.randn(self.n_h, self.n_h + self.seq_size) * std
         self.params["bf"] = np.ones((self.n_h, 1))
 
         # input gate
-        self.params["Wi"] = np.random.randn(self.n_h, self.n_h + self.vocab_size) * std
+        self.params["Wi"] = np.random.randn(self.n_h, self.n_h + self.seq_size) * std
         self.params["bi"] = np.zeros((self.n_h, 1))
 
         # cell gate
-        self.params["Wc"] = np.random.randn(self.n_h, self.n_h + self.vocab_size) * std
+        self.params["Wc"] = np.random.randn(self.n_h, self.n_h + self.seq_size) * std
         self.params["bc"] = np.zeros((self.n_h, 1))
 
         # output gate
-        self.params["Wo"] = np.random.randn(self.n_h, self.n_h + self.vocab_size) * std
+        self.params["Wo"] = np.random.randn(self.n_h, self.n_h + self.seq_size) * std
         self.params["bo"] = np.zeros((self.n_h, 1))
 
         # output
-        self.params["Wv"] = np.random.randn(self.vocab_size, self.n_h) * \
-                            (1.0 / np.sqrt(self.vocab_size))
-        self.params["bv"] = np.zeros((self.vocab_size, 1))
+        self.params["Wv"] = np.random.randn(self.seq_size, self.n_h) * \
+                            (1.0 / np.sqrt(self.seq_size))
+        self.params["bv"] = np.zeros((self.seq_size, 1))
 
         # -----initialise gradients and Adam parameters-----#
         self.grads = {}
@@ -229,7 +229,7 @@ class LSTM:
             self.adam_params["m" + key] = np.zeros_like(self.params[key])
             self.adam_params["v" + key] = np.zeros_like(self.params[key])
 
-        self.smooth_loss = -np.log(1.0 / self.vocab_size) * self.seq_len
+        self.smooth_loss = -np.log(1.0 / self.seq_size) * self.seq_len
         return
 
     def sigmoid(self, x):
