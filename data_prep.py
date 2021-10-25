@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import dbconnect as db
 from sklearn.model_selection import train_test_split
 
 def init_lstm():
@@ -21,4 +22,5 @@ def prep_dataset(path):
     return X_train, X_test, y_train, y_test
 
 #def cnn_dataset():
+
 
