@@ -103,17 +103,16 @@ class Conv:
         self.layer_name = 'Convolution 2D Layer\t\t'
         self.num_filters = num_filters
         
-        #why divide by 9...Xavier initialization
-        self.filters = np.random.randn(num_filters, 2, 2)/4
+        self.filters = np.random.randn(num_filters, 3, 1)/3
     
     def iterate_regions(self, input):
-        #generates all possible 3*3 input regions using valid padding
+        #generates all possible 3*1 input regions using valid padding
         
         h,w = input.shape
         
-        for i in range(h-2):
-            for j in range(w-2):
-                in_region = input[i:(i+2), j:(j+2)]
+        for i in range(h-3):
+            for j in range(w-1):
+                in_region = input[i:(i+3), j:(j+1)]
                 yield in_region, i, j
                 
     def forward(self, input):
@@ -121,7 +120,7 @@ class Conv:
         
         h,w = input.shape
         
-        output = np.zeros((h-2, w-2, self.num_filters))
+        output = np.zeros((h-3, w-1, self.num_filters))
         
         for in_regions, i, j in self.iterate_regions(input):
             output[i, j] = np.sum(in_regions * self.filters, axis=(1,2))
@@ -149,7 +148,7 @@ class maxpool:
     def __init__(self):
         self.layer_name = 'Maxpooling 2D Layer\t\t'
 
-    def forward(input, f=2, s=2):
+    def forward(input, f=2, s=1):
         #Downsample input `input` using a kernel size of `f` and a stride of `s`
         n_c, h_prev, w_prev = input.shape
         
