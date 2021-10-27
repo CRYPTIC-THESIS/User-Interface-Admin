@@ -99,4 +99,4 @@ for index, col in cryptoData.iterrows():
         else:
             total_data.loc[i,str(col["cryptoName"])]= total_data.loc[i,str(col["cryptoName"])] + 1
 
-total_data.to_csv('Daily_Twitter_Total.csv', mode='w', index=False, header=True)
+total_data.to_csv('Daily-Twitter-Data/Daily_Twitter_Total.csv', mode='w', index=False, header=True)
