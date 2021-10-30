@@ -17,7 +17,7 @@ def prep_dataset(path):
         df = df[:len(df)-mo]
     y = df['Date']
     X = df.drop('Date',  axis='columns', inplace=True)
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.30)
 
     return X_train, X_test, y_train, y_test
 

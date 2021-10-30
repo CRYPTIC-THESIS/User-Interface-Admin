@@ -30,7 +30,3 @@ network = [ l.Conv(16),
             l.Batch_norm()]
 #Print the network architecture
 network_archi(network)
-
-
-
-
