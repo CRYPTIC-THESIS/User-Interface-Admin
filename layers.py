@@ -100,30 +100,31 @@ class Batch_norm:
 class Conv:
     
     def __init__(self, num_filters):
-        self.layer_name = 'Convolution 2D Layer\t\t'
+        self.layer_name = 'Convolution 2D Layer'
         self.num_filters = num_filters
         
-        self.filters = np.random.randn(num_filters, 3, 1)/3
+        #why divide by 9...Xavier initialization
+        self.filters = np.random.randn(num_filters, 1, 2)/2
     
-    def iterate_regions(self, input):
-        #generates all possible 3*1 input regions using valid padding
+    def iterate_regions(self, image):
+        #generates all possible 2*2 image regions using valid padding
         
-        h,w = input.shape
+        h,w = image.shape
         
-        for i in range(h-3):
-            for j in range(w-1):
-                in_region = input[i:(i+3), j:(j+1)]
-                yield in_region, i, j
+        for i in range(h-1):
+            for j in range(w-2):
+                im_region = image[i:(i+1), j:(j+2)]
+                yield im_region, i, j
                 
     def forward(self, input):
         self.last_input = input
         
         h,w = input.shape
         
-        output = np.zeros((h-3, w-1, self.num_filters))
+        output = np.zeros((h-1, w-2, self.num_filters))
         
-        for in_regions, i, j in self.iterate_regions(input):
-            output[i, j] = np.sum(in_regions * self.filters, axis=(1,2))
+        for im_regions, i, j in self.iterate_regions(input):
+            output[i, j] = np.sum(im_regions * self.filters, axis=(1,2))
         print('Conv Block:',output.shape)
         return output
     
@@ -135,47 +136,45 @@ class Conv:
         '''
         d_l_d_filters = np.zeros(self.filters.shape)
 
-        for in_region, i, j in self.iterate_regions(self.last_input):
+        for im_region, i, j in self.iterate_regions(self.last_input):
             for f in range(self.num_filters):
-                d_l_d_filters[f] += d_l_d_out[i,j,f] * in_region
+                d_l_d_filters[f] += d_l_d_out[i,j,f] * im_region
 
         #update filters
         self.filters -= learn_rate * d_l_d_filters
 
         return None
 
-class maxpool:
-    def __init__(self):
-        self.layer_name = 'Maxpooling 2D Layer\t\t'
 
-    def forward(input, f=2, s=1):
-        #Downsample input `input` using a kernel size of `f` and a stride of `s`
-        n_c, h_prev, w_prev = input.shape
+
+def maxpool(data, f=2, s=1):
+    #Downsample data `data` using a kernel size of `f` and a stride of `s`
+    n_c, h_prev, w_prev = data.shape
         
-        # calculate output dimensions after the maxpooling operation.
-        h = int((h_prev - f)/s)+1 
-        w = int((w_prev - f)/s)+1
+    # calculate output dimensions after the maxpooling operation.
+    h = int((h_prev - f)/s)+1 
+    w = int((w_prev - f)/s)+1
         
-        # create a matrix to hold the values of the maxpooling operation.
-        downsampled = np.zeros((n_c, h, w)) 
+    # create a matrix to hold the values of the maxpooling operation.
+    downsampled = np.zeros((n_c, h, w)) 
         
-        # slide the window over every part of the input using stride s. Take the maximum value at each step.
-        for i in range(n_c):
-            curr_y = out_y = 0
-            # slide the max pooling window vertically across the input
-            while curr_y + f <= h_prev:
-                curr_x = out_x = 0
-                # slide the max pooling window horizontally across the input
-                while curr_x + f <= w_prev:
-                    # choose the maximum value within  the window at each step and store it to the output matrix
-                    downsampled[i, out_y, out_x] = np.max(input[i, curr_y:curr_y+f, curr_x:curr_x+f])
-                    curr_x += s
-                    out_x += 1
-                curr_y += s
-                out_y += 1
-        downsampled = downsampled.reshape(downsampled.shape[0], (downsampled.shape[1]*downsampled.shape[2]))
-        print('Maxpooling Layer:',downsampled.shape)
-        return downsampled
+    # slide the window over every part of the data using stride s. Take the maximum value at each step.
+    for i in range(n_c):
+        curr_y = out_y = 0
+        # slide the max pooling window vertically across the data
+        while curr_y + f <= h_prev:
+            curr_x = out_x = 0
+            # slide the max pooling window horizontally across the data
+            while curr_x + f <= w_prev:
+                # choose the maximum value within  the window at each step and store it to the output matrix
+                downsampled[i, out_y, out_x] = np.max(data[i, curr_y:curr_y+f, curr_x:curr_x+f])
+                curr_x += s
+                out_x += 1
+            curr_y += s
+            out_y += 1
+    downsampled = downsampled.reshape(downsampled.shape[0], (downsampled.shape[1]*downsampled.shape[2]))
+    print('Maxpooling Layer:',downsampled.shape)
+    return downsampled
 
 class LSTM:
     def __init__(self, value_to_idx, idx_to_value, seq_size, n_h=100, seq_len=25,
