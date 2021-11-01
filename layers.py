@@ -102,18 +102,16 @@ class Conv:
     def __init__(self, num_filters):
         self.layer_name = 'Convolution 2D Layer'
         self.num_filters = num_filters
-        
-        #why divide by 9...Xavier initialization
-        self.filters = np.random.randn(num_filters, 1, 2)/2
-    
+        self.filters = np.random.randn(num_filters, 1, 3)/3
+            
     def iterate_regions(self, image):
-        #generates all possible 2*2 image regions using valid padding
+        #generates all possible 1*3 image regions using valid padding
         
         h,w = image.shape
         
         for i in range(h-1):
-            for j in range(w-2):
-                im_region = image[i:(i+1), j:(j+2)]
+            for j in range(w-3):
+                im_region = image[i:(i+1), j:(j+3)]
                 yield im_region, i, j
                 
     def forward(self, input):
@@ -121,7 +119,7 @@ class Conv:
         
         h,w = input.shape
         
-        output = np.zeros((h-1, w-2, self.num_filters))
+        output = np.zeros((h-1, w-3, self.num_filters))
         
         for im_regions, i, j in self.iterate_regions(input):
             output[i, j] = np.sum(im_regions * self.filters, axis=(1,2))
@@ -147,7 +145,7 @@ class Conv:
 
 
 
-def maxpool(data, f=2, s=1):
+def maxpool(data, f=3, s=1):
     #Downsample data `data` using a kernel size of `f` and a stride of `s`
     n_c, h_prev, w_prev = data.shape
         
@@ -182,9 +180,9 @@ class LSTM:
         """
         Implementation of simple character-level LSTM using Numpy
         """
-        self.layer_name = 'LSTM Layer\t\t\t'
-        self.value_to_idx = value_to_idx  # characters to indices mapping
-        self.idx_to_value = idx_to_value  # indices to characters mapping
+        self.layer_name = 'LSTM Block'
+        self.vals_to_idx = value_to_idx  # characters to indices mapping
+        self.idx_to_vals = idx_to_value  # indices to characters mapping
         self.seq_size = seq_size  # no. of unique characters in the training data
         self.n_h = n_h  # no. of units in the hidden layer
         self.seq_len = seq_len  # no. of time steps, also size of mini batch
@@ -278,7 +276,7 @@ class LSTM:
         """
         Outputs a sample sequence from the model
         """
-        x = np.zeros((self.vocab_size, 1))
+        x = np.zeros((self.seq_size, 1))
         h = h_prev
         c = c_prev
         sample_string = ""
@@ -287,8 +285,8 @@ class LSTM:
             y_hat, _, h, _, c, _, _, _, _ = self.forward_step(x, h, c)
 
             # get a random index within the probability distribution of y_hat(ravel())
-            idx = np.random.choice(range(self.vocab_size), p=y_hat.ravel())
-            x = np.zeros((self.vocab_size, 1))
+            idx = np.random.choice(range(self.seq_size), p=y_hat.ravel())
+            x = np.zeros((self.seq_size, 1))
             x[idx] = 1
 
             # find the char with the sampled index and concat to the output string
@@ -318,6 +316,7 @@ class LSTM:
         """
         Implements the backward propagation for one time step
         """
+        
         dv = np.copy(y_hat)
         dv[y] -= 1  # yhat - y
 
@@ -373,7 +372,7 @@ class LSTM:
 
         loss = 0
         for t in range(self.seq_len):
-            x[t] = np.zeros((self.vocab_size, 1))
+            x[t] = np.zeros((self.seq_size, 1))
             x[t][x_batch[t]] = 1
 
             y_hat[t], v[t], h[t], o[t], c[t], c_bar[t], i[t], f[t], z[t] = \
@@ -396,14 +395,14 @@ class LSTM:
         """
         Checks the magnitude of gradients against expected approximate values
         """
-        #print("**********************************")
+        print("**********************************")
         print("Gradient check...\n")
 
         _, _, _ = self.forward_backward(x, y, h_prev, c_prev)
         grads_numerical = self.grads
 
         for key in self.params:
-            #print("---------", key, "---------")
+            print("---------", key, "---------")
             test = True
 
             dims = self.params[key].shape
@@ -436,5 +435,5 @@ class LSTM:
                     test = False
                     assert (test)
 
-            #print('Approximate: \t%e, Exact: \t%e =>  Error: \t%e' % (grad_numerical, grad_analytical, rel_error))
+            print('Approximate: \t%e, Exact: \t%e =>  Error: \t%e' % (grad_numerical, grad_analytical, rel_error))
         print("\nTest successful!")

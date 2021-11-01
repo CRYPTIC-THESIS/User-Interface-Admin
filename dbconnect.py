@@ -49,13 +49,13 @@ def update_trend(tbl_name,values):
     ref = db.reference(tbl_name,default_app)
     data = ref.get()
     last_idx = len(data)
-    for i in range(len(values)):
-        users_ref = ref.child(str(last_idx+i))
+    for index, row in values.iterrows():
+        users_ref = ref.child(str(last_idx+index))
         users_ref.set({
-            'date':values['Date'],
-            'btc':values['bitcoin'], 
-            'eth':values['ethereum'], 
-            'doge':values['dogecoin']
+            'date':row['Date'],
+            'btc':row['bitcoin'], 
+            'eth':row['ethereum'], 
+            'doge':row['dogecoin']
     
     })
     updated(tbl_name)
