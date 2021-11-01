@@ -31,10 +31,10 @@ def insert_crypto_csv(tbl_name,csv_path):
         users_ref = ref.child(str(index))
         users_ref.set({
             'date':row['Date'],
-            'price':row['Closing Price'], 
-            'open':row['24h Open'], 
-            'high':row['24h High'],
-            'low':row['24h Low']
+            'price':row['Closing Price (USD)'], 
+            'open':row['24h Open (USD)'], 
+            'high':row['24h High (USD)'],
+            'low':row['24h Low (USD)']
     })
     print(csv_path+" Successdully Imported")
 
