@@ -32,3 +32,5 @@ def get_cur():
 
     data = [btc_c,btc_h,btc_l,eth_c,eth_h,eth_l,dog_c,dog_h,dog_l]
     return data
+
+print(get_cur())
